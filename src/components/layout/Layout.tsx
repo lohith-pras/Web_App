@@ -20,7 +20,7 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
             </div>
 
             {/* Subtle radial gradient overlay */}
-            <div className="fixed inset-0 bg-gradient-radial from-transparent via-transparent to-slate-100/50 dark:to-black/50 -z-10 transition-colors duration-300" />
+            <div className="fixed inset-0 [background-image:radial-gradient(circle,transparent,transparent,rgb(241_245_249/0.5)_100%)] dark:[background-image:radial-gradient(circle,transparent,transparent,rgb(0_0_0/0.5)_100%)] -z-10 transition-colors duration-300" />
 
             <main className="relative z-10 pb-28 max-w-md mx-auto min-h-screen flex flex-col p-4">
                 {children}

@@ -38,7 +38,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      onClick={() => onClick}
+      onClick={onClick}
       disabled={disabled}
       className={`btn btn-${variant}`}
       aria-label={label}

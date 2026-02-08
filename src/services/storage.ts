@@ -182,7 +182,12 @@ export const storage = {
     getDarkMode(): boolean {
         const mode = this.getThemeMode();
         if (mode === 'system') {
-            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // Guard for SSR/non-browser environments
+            if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+            // Fallback to light mode if matchMedia is unavailable
+            return false;
         }
         return mode === 'dark';
     },

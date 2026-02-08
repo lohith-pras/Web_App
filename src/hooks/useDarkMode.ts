@@ -3,9 +3,9 @@ import { storage } from '../services/storage';
 import type { ThemeMode } from '../types';
 
 function getSystemPreference(): boolean {
+    if (typeof window === 'undefined') return false;
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
-
 function resolveTheme(mode: ThemeMode): boolean {
     if (mode === 'system') {
         return getSystemPreference();
@@ -58,7 +58,8 @@ export function useDarkMode() {
     };
 
     const toggleDarkMode = () => {
-        // Cycle through: system -> light -> dark -> system
+        // Toggle to opposite appearance. From system mode, switches to explicit
+        // opposite of current system preference. Then: light -> dark -> system.
         if (themeMode === 'system') {
             setThemeMode(isDark ? 'light' : 'dark');
         } else if (themeMode === 'light') {
@@ -67,6 +68,5 @@ export function useDarkMode() {
             setThemeMode('system');
         }
     };
-
     return { isDark, themeMode, setTheme, toggleDarkMode };
 }

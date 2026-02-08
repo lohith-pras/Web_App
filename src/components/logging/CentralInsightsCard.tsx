@@ -23,6 +23,7 @@ export function CentralInsightsCard({
                 cigarettesAvoided: 0,
                 daysTracking: 0,
                 longestStreak: 0,
+                avgPerDay: 0,
             };
         }
 
@@ -47,10 +48,10 @@ export function CentralInsightsCard({
         const moneySaved = cigarettesAvoided * costPerCigarette;
 
         return {
-            moneySaved: moneySaved.toFixed(2),
+            moneySaved,
             cigarettesAvoided,
             daysTracking,
-            avgPerDay: avgPerDay.toFixed(1),
+            avgPerDay,
         };
     }, [logs]);
 
@@ -68,7 +69,7 @@ export function CentralInsightsCard({
                 <div className="relative overflow-hidden bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-xl p-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
                     <div className="flex flex-col items-center justify-center gap-1">
                         <div className="text-3xl">💰</div>
-                        <div className="text-2xl font-bold text-emerald-400">${stats.moneySaved}</div>
+                        <div className="text-2xl font-bold text-emerald-400">${stats.moneySaved.toFixed(2)}</div>
                         <div className="text-xs text-gray-300 text-center">Money Saved</div>
                     </div>
                 </div>
@@ -95,7 +96,7 @@ export function CentralInsightsCard({
                 <div className="relative overflow-hidden bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-xl p-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
                     <div className="flex flex-col items-center justify-center gap-1">
                         <div className="text-3xl">📊</div>
-                        <div className="text-2xl font-bold text-blue-400">{stats.avgPerDay}</div>
+                        <div className="text-2xl font-bold text-blue-400">{stats.avgPerDay.toFixed(1)}</div>
                         <div className="text-xs text-gray-300 text-center">Avg Per Day</div>
                     </div>
                 </div>

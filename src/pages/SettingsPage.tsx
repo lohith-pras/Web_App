@@ -58,12 +58,22 @@ export function SettingsPage({
                 <h3 className="text-gray-600 dark:text-gray-300 text-xs font-semibold uppercase tracking-wider ml-4">Preferences</h3>
                 <GlassCard className="p-0 overflow-hidden divide-y divide-gray-200/50 dark:divide-white/5">
                     <div className="p-4 flex items-center justify-between">
-                        <span className="text-gray-900 dark:text-white">Notifications</span>
+                        <span className="text-gray-900 dark:text-white" id="notifications-label">Notifications</span>
                         <button
+                            role="switch"
+                            aria-checked={notificationsEnabled}
+                            aria-labelledby="notifications-label"
                             onClick={() => setNotificationsEnabled(!notificationsEnabled)}
-                            className={`w-12 h-7 rounded-full transition-colors relative ${notificationsEnabled ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gray-300 dark:bg-white/10'}`}
+                            className={`w-12 h-7 rounded-full transition-colors relative ${
+                                notificationsEnabled ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gray-300 dark:bg-white/10'
+                            }`}
                         >
-                            <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${notificationsEnabled ? 'translate-x-5' : ''}`} />
+                            <div 
+                                aria-hidden="true"
+                                className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${
+                                    notificationsEnabled ? 'translate-x-5' : ''
+                                }`} 
+                            />
                         </button>
                     </div>
                     <div className="p-4 flex items-center justify-between">
@@ -74,6 +84,7 @@ export function SettingsPage({
                         <div className="flex gap-2">
                             <button
                                 onClick={() => onSetTheme('light')}
+                                aria-label="Light theme"
                                 className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${
                                     themeMode === 'light'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
@@ -85,6 +96,7 @@ export function SettingsPage({
                             </button>
                             <button
                                 onClick={() => onSetTheme('dark')}
+                                aria-label="Dark theme"
                                 className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${
                                     themeMode === 'dark'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
@@ -96,6 +108,7 @@ export function SettingsPage({
                             </button>
                             <button
                                 onClick={() => onSetTheme('system')}
+                                aria-label="System preference"
                                 className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${
                                     themeMode === 'system'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'

@@ -212,6 +212,14 @@ interface Log {
   triggerIds: string[];
 }
 
+// Example storage function
+async function saveToStorage(log: Log): Promise<void> {
+  const stored = localStorage.getItem('logs');
+  const logs: Log[] = stored ? JSON.parse(stored) : [];
+  logs.push(log);
+  localStorage.setItem('logs', JSON.stringify(logs));
+}
+
 function LoggingComponent() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [optimisticLogs, addOptimisticLog] = useOptimistic(

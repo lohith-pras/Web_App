@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useId } from 'react';
 import { TriggerSelectionModal } from '../components/logging/TriggerSelectionModal';
 import type { Trigger, SmokingLog } from '../types';
 import { formatDate } from '../utils/dateHelpers';
@@ -12,6 +12,7 @@ interface LogPageProps {
 
 export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
     const [showModal, setShowModal] = useState(false);
+    const progressGradientId = useId();
 
     // Get today's count
     const today = formatDate(new Date());
@@ -57,7 +58,15 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
 
                 {/* Large Circular Progress - Primary Visual Anchor */}
                 <div className="flex justify-center py-10">
-                    <div className="relative flex items-center justify-center" style={{ width: 280, height: 280 }}>
+                    <div 
+                        className="relative flex items-center justify-center" 
+                        style={{ width: 280, height: 280 }}
+                        role="progressbar"
+                        aria-valuenow={progress}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`${todayCount} cigarettes smoked today. Last smoked: ${timeSinceLastSmoke}`}
+                    >
                         {/* Glassmorphic Circle Background */}
                         <div className="absolute inset-0 bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]" />
                         
@@ -84,7 +93,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                                 cy={140}
                                 r={126}
                                 fill="transparent"
-                                stroke="url(#progressGradient)"
+                                stroke={`url(#${progressGradientId})`}
                                 strokeWidth="12"
                                 strokeLinecap="round"
                                 strokeDasharray={2 * Math.PI * 126}
@@ -92,7 +101,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                                 style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
                             />
                             <defs>
-                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <linearGradient id={progressGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor="#10b981" />
                                     <stop offset="50%" stopColor="#6366f1" />
                                     <stop offset="100%" stopColor="#8b5cf6" />

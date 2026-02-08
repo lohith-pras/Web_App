@@ -340,8 +340,8 @@ function BottomNav() {
       bg-white border-t border-gray-200
       flex justify-around items-center
       h-16 px-4
-      safe-area-inset-bottom
     "
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <NavButton icon="🏠" label="Home" />
       <NavButton icon="📊" label="Insights" />

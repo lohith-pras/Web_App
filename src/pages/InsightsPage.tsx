@@ -66,8 +66,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
         <div className="min-h-screen px-4 pt-8 pb-8 flex flex-col gap-6">
             {/* Header */}
             <div className="flex items-center gap-3">
-                <div className="relative overflow-hidden w-12 h-12 rounded-full bg-indigo-600/30 backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 flex items-center justify-center text-indigo-300 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="relative overflow-hidden w-12 h-12 rounded-full bg-indigo-600/30 backdrop-blur-[20px] backdrop-saturate-150 border border-t-white/20 border-l-white/20 border-b-white/5 border-r-white/5 flex items-center justify-center text-indigo-300 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                 </div>
@@ -75,8 +74,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
             </div>
 
             {/* Time Period Selector */}
-            <div className="relative overflow-hidden bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] p-1 flex">
-                {/* Custom toggle implementation would go here, reusing existing component for now but wrapping it */}
+            <div className="relative overflow-hidden bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border border-t-white/20 border-l-white/20 border-b-white/5 border-r-white/5 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] p-1 flex">                {/* Custom toggle implementation would go here, reusing existing component for now but wrapping it */}
                 <TimePeriodToggle selected={timePeriod} onChange={setTimePeriod} />
             </div>
 
@@ -89,7 +87,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
                         <span className="text-gray-300 mb-1">/ {monthlyGoal}</span>
                     </div>
                     {/* Glass Progress Bar */}
-                    <div className="relative w-full h-3 bg-white/[0.08] border-t border-l border-white/20 border-b border-r border-white/5 rounded-full mt-4 overflow-hidden backdrop-blur-[20px] backdrop-saturate-150">
+                    <div className="relative w-full h-3 bg-white/[0.08] border-t border-l border-t-white/20 border-l-white/20 border-b border-r border-b-white/5 border-r-white/5 rounded-full mt-4 overflow-hidden backdrop-blur-[20px] backdrop-saturate-150">
                         <div
                             className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(99,102,241,0.5)]"
                             style={{ width: `${progress}%` }}
