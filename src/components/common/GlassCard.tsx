@@ -13,8 +13,8 @@ export function GlassCard({ children, className, onClick }: GlassCardProps) {
         <div
             onClick={onClick}
             className={cn(
-                "bg-white rounded-lg shadow-md p-6 transition-all duration-200",
-                onClick && "cursor-pointer hover:shadow-lg active:scale-[0.98]",
+                "bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-slate-900/50 p-6 transition-all duration-200",
+                onClick && "cursor-pointer hover:shadow-lg dark:hover:shadow-slate-900/70 active:scale-[0.98]",
                 className
             )}
         >

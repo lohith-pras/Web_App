@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+:root {
+  --tooltip-bg: #ffffff;
+  --tooltip-border: #e5e7eb;
+  --tooltip-text: #1f2937;
+}
+
+.dark {
+  --tooltip-bg: #1e293b;
+  --tooltip-border: #334155;
+  --tooltip-text: #f1f5f9;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -15,6 +27,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #f3f4f6;
   min-height: 100vh;
+  transition: background-color 0.3s ease;
+}
+
+.dark body {
+  background: #0f172a;
 }
 
 
@@ -46,16 +63,28 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #f3f4f6;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 
 /* Focus styles */
@@ -63,4 +92,9 @@ button:focus-visible,
 input:focus-visible {
   outline: 2px solid #10b981;
   outline-offset: 2px;
+}
+
+.dark button:focus-visible,
+.dark input:focus-visible {
+  outline-color: #34d399;
 }

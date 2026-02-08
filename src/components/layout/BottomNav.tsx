@@ -7,11 +7,11 @@ interface BottomNavProps {
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-area-inset-bottom shadow-lg">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 safe-area-inset-bottom shadow-lg transition-colors duration-200">
             <div className="flex justify-around items-center h-20 max-w-md mx-auto">
                 <button
                     onClick={() => onTabChange('log')}
-                    className={`flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 ${activeTab === 'log' ? 'text-primary-500' : 'text-gray-400 hover:text-gray-600'
+                    className={`flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 ${activeTab === 'log' ? 'text-primary-500 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                         }`}
                 >
                     <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
 
                 <button
                     onClick={() => onTabChange('insights')}
-                    className={`flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 ${activeTab === 'insights' ? 'text-primary-500' : 'text-gray-400 hover:text-gray-600'
+                    className={`flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 ${activeTab === 'insights' ? 'text-primary-500 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                         }`}
                 >
                     <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
 
                 <button
                     onClick={() => onTabChange('settings')}
-                    className={`flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 ${activeTab === 'settings' ? 'text-primary-500' : 'text-gray-400 hover:text-gray-600'
+                    className={`flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 ${activeTab === 'settings' ? 'text-primary-500 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                         }`}
                 >
                     <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

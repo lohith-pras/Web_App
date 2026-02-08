@@ -8,6 +8,7 @@ import { useSmokingLogs } from './hooks/useSmokingLogs';
 import { useTriggers } from './hooks/useTriggers';
 import { useGoal } from './hooks/useGoal';
 import { useToast } from './hooks/useToast';
+import { useDarkMode } from './hooks/useDarkMode';
 import { autoCleanup } from './services/dataCleanup';
 import { storage } from './services/storage';
 import type { TabType } from './types';
@@ -28,6 +29,7 @@ function App() {
   const { allTriggers } = useTriggers();
   const { monthlyGoal, currentMonthCount, progress } = useGoal(logs);
   const { show, message, showToast, hideToast } = useToast();
+  const { isDark, themeMode, setTheme, toggleDarkMode } = useDarkMode();
 
   // Handle adding a log
   const handleAddLog = (trigger: string) => {
@@ -64,6 +66,9 @@ function App() {
           monthlyGoal={monthlyGoal}
           logs={logs}
           onClearData={handleClearData}
+          isDark={isDark}
+          themeMode={themeMode}
+          onSetTheme={setTheme}
         />
       )}
 

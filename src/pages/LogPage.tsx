@@ -45,12 +45,12 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
             {/* Header */}
             <div className="flex items-center justify-between w-full mb-8">
                 <div className="flex flex-col">
-                    <h1 className="text-3xl font-thin text-gray-900 tracking-wider">QuitTrack</h1>
-                    <span className="text-primary-500 text-sm font-medium tracking-wide">
+                    <h1 className="text-3xl font-thin text-gray-900 dark:text-white tracking-wider">QuitTrack</h1>
+                    <span className="text-primary-500 dark:text-primary-400 text-sm font-medium tracking-wide">
                         {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                     </span>
                 </div>
-                <div className="bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full">
+                <div className="bg-white dark:bg-slate-800 shadow-md dark:shadow-slate-900/50 w-10 h-10 flex items-center justify-center rounded-full">
                     {/* User Profile / Settings shortcut? */}
                     <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-success-500 to-primary-500 opacity-80" />
                 </div>
@@ -70,7 +70,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                         cy={140}
                         r={126}
                         fill="transparent"
-                        stroke="#e5e7eb"
+                        className="stroke-gray-200 dark:stroke-slate-700"
                         strokeWidth="12"
                         strokeLinecap="round"
                     />
@@ -80,7 +80,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                         cy={140}
                         r={126}
                         fill="transparent"
-                        stroke="#10b981"
+                        className="stroke-success-500 dark:stroke-success-400"
                         strokeWidth="12"
                         strokeLinecap="round"
                         strokeDasharray={2 * Math.PI * 126}
@@ -90,9 +90,9 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                 </svg>
                 {/* Center Content */}
                 <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                    <span className="text-6xl font-bold text-gray-900 mb-2">{todayCount}</span>
-                    <span className="text-sm text-gray-600 uppercase tracking-widest">Cigarettes</span>
-                    <span className="text-xs text-success-500 mt-2 font-medium">
+                    <span className="text-6xl font-bold text-gray-900 dark:text-white mb-2">{todayCount}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-widest">Cigarettes</span>
+                    <span className="text-xs text-success-500 dark:text-success-400 mt-2 font-medium">
                         Last: {timeSinceLastSmoke}
                     </span>
                 </div>
@@ -101,28 +101,28 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
             {/* Quick Log Button */}
             <button
                 onClick={() => setShowModal(true)}
-                className="w-full bg-white shadow-md rounded-lg py-6 mb-8 flex items-center justify-center gap-4 active:scale-95 transition-all group border border-gray-200 hover:shadow-lg"
+                className="w-full bg-white dark:bg-slate-800 shadow-md dark:shadow-slate-900/50 rounded-lg py-6 mb-8 flex items-center justify-center gap-4 active:scale-95 transition-all group border border-gray-200 dark:border-slate-700 hover:shadow-lg dark:hover:shadow-slate-900/70"
             >
-                <div className="w-12 h-12 rounded-full bg-success-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-full bg-success-500 dark:bg-success-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                 </div>
-                <span className="text-xl font-medium text-gray-900">Log Cigarette</span>
+                <span className="text-xl font-medium text-gray-900 dark:text-white">Log Cigarette</span>
             </button>
 
             {/* Recent / Context */}
             <div className="w-full">
-                <h3 className="text-gray-500 text-sm font-medium mb-4 uppercase tracking-wider">Recent Triggers</h3>
+                <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4 uppercase tracking-wider">Recent Triggers</h3>
                 <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
                     {triggers.slice(0, 4).map(trigger => (
                         <GlassCard
                             key={trigger.id}
                             onClick={() => onAddLog(trigger.name)}
-                            className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 gap-2 hover:border-primary-500"
+                            className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 gap-2 hover:border-primary-500 dark:hover:border-primary-400"
                         >
                             <span className="text-2xl">{trigger.icon}</span>
-                            <span className="text-xs text-gray-600">{trigger.name}</span>
+                            <span className="text-xs text-gray-600 dark:text-gray-400">{trigger.name}</span>
                         </GlassCard>
                     ))}
                 </div>

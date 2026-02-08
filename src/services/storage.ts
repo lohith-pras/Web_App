@@ -147,6 +147,50 @@ export const storage = {
         }
     },
 
+    // Theme mode
+    getThemeMode(): 'light' | 'dark' | 'system' {
+        if (!isStorageAvailable()) return 'system';
+
+        try {
+            const data = localStorage.getItem(STORAGE_KEYS.DARK_MODE);
+            if (data === 'light' || data === 'dark' || data === 'system') {
+                return data;
+            }
+            return 'system';
+        } catch (error) {
+            console.error('Error reading theme mode from storage:', error);
+            return 'system';
+        }
+    },
+
+    saveThemeMode(mode: 'light' | 'dark' | 'system'): boolean {
+        if (!isStorageAvailable()) {
+            console.error('localStorage is not available');
+            return false;
+        }
+
+        try {
+            localStorage.setItem(STORAGE_KEYS.DARK_MODE, mode);
+            return true;
+        } catch (error) {
+            console.error('Error saving theme mode to storage:', error);
+            return false;
+        }
+    },
+
+    // Legacy support
+    getDarkMode(): boolean {
+        const mode = this.getThemeMode();
+        if (mode === 'system') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        return mode === 'dark';
+    },
+
+    saveDarkMode(isDark: boolean): boolean {
+        return this.saveThemeMode(isDark ? 'dark' : 'light');
+    },
+
     // Clear all data
     clearAll(): boolean {
         if (!isStorageAvailable()) {

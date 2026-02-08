@@ -8,11 +8,8 @@ interface DailyTrendChartProps {
 export function DailyTrendChart({ data }: DailyTrendChartProps) {
     if (data.length === 0) {
         return (
-            <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-gray-800">
-                <h3 className="text-lg font-semibold text-white mb-4">Daily Trend</h3>
-                <div className="flex items-center justify-center h-48 text-gray-500">
-                    <p>No data yet. Start logging to see trends.</p>
-                </div>
+            <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
+                <p>No data yet. Start logging to see trends.</p>
             </div>
         );
     }
@@ -23,19 +20,14 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
     const change = previousAvg > 0 ? Math.round(((recentAvg - previousAvg) / previousAvg) * 100) : 0;
 
     return (
-        <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-gray-800">
-            <div className="flex items-center justify-between mb-4">
-                <div>
-                    <h3 className="text-lg font-semibold text-white">Daily Trend</h3>
-                    <p className="text-gray-400 text-sm">Last 7 Days</p>
+        <div>
+            {data.length >= 14 && (
+                <div className={`px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block ${
+                    change < 0 ? 'bg-green-500/20 text-green-500 dark:bg-green-600/20 dark:text-green-400' : 'bg-red-500/20 text-red-500 dark:bg-red-600/20 dark:text-red-400'
+                }`}>
+                    {change < 0 ? '↓' : '↑'} {Math.abs(change)}% vs last week
                 </div>
-                {data.length >= 14 && (
-                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${change < 0 ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
-                        }`}>
-                        {change < 0 ? '↓' : '↑'} {Math.abs(change)}% vs last week
-                    </div>
-                )}
-            </div>
+            )}
 
             <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={data}>
@@ -45,23 +37,23 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
                             <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-slate-700" />
                     <XAxis
                         dataKey="date"
-                        stroke="#6b7280"
-                        tick={{ fill: '#6b7280', fontSize: 12 }}
+                        className="stroke-gray-400 dark:stroke-gray-500"
+                        tick={{ fill: 'currentColor', fontSize: 12 }}
                         tickFormatter={(value) => {
                             const date = new Date(value);
                             return ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()];
                         }}
                     />
-                    <YAxis stroke="#6b7280" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                    <YAxis className="stroke-gray-400 dark:stroke-gray-500" tick={{ fill: 'currentColor', fontSize: 12 }} />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: '#1a1a1a',
-                            border: '1px solid #2a2a2a',
+                            backgroundColor: 'var(--tooltip-bg)',
+                            border: '1px solid var(--tooltip-border)',
                             borderRadius: '8px',
-                            color: '#fff',
+                            color: 'var(--tooltip-text)',
                         }}
                         labelFormatter={(value) => new Date(value).toLocaleDateString()}
                     />

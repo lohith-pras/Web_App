@@ -66,16 +66,16 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
         <div className="min-h-screen px-4 pt-8 pb-8 flex flex-col gap-6">
             {/* Header */}
             <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-500">
+                <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-500 dark:text-primary-400">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">Insights</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
             </div>
 
             {/* Time Period Selector */}
-            <div className="bg-white rounded-lg shadow-md p-1 flex relative">
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-slate-900/50 p-1 flex relative transition-colors duration-200">
                 {/* Custom toggle implementation would go here, reusing existing component for now but wrapping it */}
                 <TimePeriodToggle selected={timePeriod} onChange={setTimePeriod} />
             </div>
@@ -83,15 +83,15 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
             {/* Goal Progress */}
             <GlassCard className="relative overflow-hidden">
                 <div className="relative z-10">
-                    <h3 className="text-gray-500 text-sm font-medium uppercase tracking-wider mb-2">Monthly Goal</h3>
+                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wider mb-2">Monthly Goal</h3>
                     <div className="flex items-end gap-2">
-                        <span className="text-4xl font-bold text-gray-900">{currentMonthCount}</span>
-                        <span className="text-gray-600 mb-1">/ {monthlyGoal}</span>
+                        <span className="text-4xl font-bold text-gray-900 dark:text-white">{currentMonthCount}</span>
+                        <span className="text-gray-600 dark:text-gray-400 mb-1">/ {monthlyGoal}</span>
                     </div>
                     {/* Simple Progress Bar */}
-                    <div className="w-full h-2 bg-gray-200 rounded-full mt-4 overflow-hidden">
+                    <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full mt-4 overflow-hidden">
                         <div
-                            className="h-full bg-primary-500 rounded-full transition-all duration-500"
+                            className="h-full bg-primary-500 dark:bg-primary-400 rounded-full transition-all duration-500"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
@@ -101,25 +101,25 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
             {/* Trends */}
             <div className="grid grid-cols-2 gap-4">
                 <GlassCard className="flex flex-col">
-                    <span className="text-xs text-gray-500 uppercase">Daily Avg</span>
-                    <span className="text-2xl font-bold text-gray-900 mt-1">{dailyAverage.toFixed(1)}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase">Daily Avg</span>
+                    <span className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{dailyAverage.toFixed(1)}</span>
                 </GlassCard>
                 <GlassCard className="flex flex-col">
-                    <span className="text-xs text-gray-500 uppercase">Top Trigger</span>
-                    <span className="text-2xl font-bold text-primary-500 mt-1 truncate">{topTrigger}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase">Top Trigger</span>
+                    <span className="text-2xl font-bold text-primary-500 dark:text-primary-400 mt-1 truncate">{topTrigger}</span>
                 </GlassCard>
             </div>
 
             {/* Charts */}
             <GlassCard>
-                <h3 className="text-gray-500 text-sm font-medium mb-4">Activity Trend</h3>
+                <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">Activity Trend</h3>
                 <div className="h-48 -mx-2">
                     <DailyTrendChart data={dailyTrendData} />
                 </div>
             </GlassCard>
 
             <GlassCard>
-                <h3 className="text-gray-500 text-sm font-medium mb-4">Triggers</h3>
+                <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">Triggers</h3>
                 <div className="h-48">
                     <TriggerBreakdownChart data={triggerData} />
                 </div>
