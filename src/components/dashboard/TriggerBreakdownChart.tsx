@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import type { LegendPayload } from 'recharts';
 import type { ChartDataPoint } from '../../types';
 
 interface TriggerBreakdownChartProps {
@@ -47,8 +48,9 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                     />
                     <Legend
                         wrapperStyle={{ fontSize: '12px' }}
-                        formatter={(value, entry: any) => (
-                            <span className="text-gray-300">{`${value} (${entry.payload.value})`}</span>
+                        formatter={(value, entry: LegendPayload) => (
+                            // entry.payload.value is optional in LegendPayload type, so we use nullish coalescing for safety
+                            <span className="text-gray-700 dark:text-gray-300">{`${value} (${entry.payload?.value ?? 0})`}</span>
                         )}
                     />
                 </PieChart>
@@ -70,9 +72,9 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                                         boxShadow: `0 0 8px ${COLORS[index % COLORS.length]}40`
                                     }}
                                 />
-                                <span className="text-gray-300 text-sm">{item.name}</span>
+                                <span className="text-gray-700 dark:text-gray-300 text-sm">{item.name}</span>
                             </div>
-                            <span className="text-white font-medium">{percentage}%</span>
+                            <span className="text-gray-900 dark:text-white font-medium">{percentage}%</span>
                         </div>
                     );
                 })}

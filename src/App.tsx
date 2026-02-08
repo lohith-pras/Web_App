@@ -29,7 +29,7 @@ function App() {
   const { allTriggers } = useTriggers();
   const { monthlyGoal, currentMonthCount, progress } = useGoal(logs);
   const { show, message, showToast, hideToast } = useToast();
-  const { isDark, themeMode, setTheme, toggleDarkMode } = useDarkMode();
+  const { isDark, themeMode, setTheme } = useDarkMode();
 
   // Handle adding a log
   const handleAddLog = (trigger: string) => {

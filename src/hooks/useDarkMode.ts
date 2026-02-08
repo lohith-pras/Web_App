@@ -3,7 +3,7 @@ import { storage } from '../services/storage';
 import type { ThemeMode } from '../types';
 
 function getSystemPreference(): boolean {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 function resolveTheme(mode: ThemeMode): boolean {
@@ -31,6 +31,12 @@ export function useDarkMode() {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         const handleChange = (e: MediaQueryListEvent) => {
             setIsDark(e.matches);
+            // Apply dark mode class immediately on system change
+            if (e.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         };
 
         mediaQuery.addEventListener('change', handleChange);
