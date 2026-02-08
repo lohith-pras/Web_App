@@ -13,28 +13,10 @@ export interface Trigger {
     isCustom: boolean;
 }
 
-// Component props
-export interface TriggerSelectionModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSelectTrigger: (trigger: string) => void;
-    triggers: Trigger[];
-}
-
 export interface ToastProps {
     message: string;
     show: boolean;
     onClose: () => void;
-}
-
-export interface ConfirmDialogProps {
-    isOpen: boolean;
-    title: string;
-    message: string;
-    onConfirm: () => void;
-    onCancel: () => void;
-    confirmText?: string;
-    cancelText?: string;
 }
 
 // Utility types

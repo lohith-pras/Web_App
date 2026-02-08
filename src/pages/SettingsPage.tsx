@@ -1,16 +1,10 @@
 
 import { useState } from 'react';
 import { GlassCard } from '../components/common/GlassCard';
-import type { Trigger, SmokingLog } from '../types';
-import { storage } from '../services/storage';
+import type { SmokingLog } from '../types';
 
 interface SettingsPageProps {
     monthlyGoal: number;
-    onGoalChange: (newGoal: number) => void;
-    currentProgress: number;
-    customTriggers: Trigger[];
-    onAddTrigger: (name: string, icon: string) => void;
-    onDeleteTrigger: (id: string) => void;
     logs: SmokingLog[];
     onClearData: () => void;
 }
@@ -18,10 +12,8 @@ interface SettingsPageProps {
 export function SettingsPage({
     monthlyGoal,
     logs,
+    onClearData,
 }: SettingsPageProps) {
-    // Note: Some props are unused in this mock implementation but kept for interface compatibility
-    // In a real refactor we'd connect them all.
-
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
     return (
@@ -80,8 +72,7 @@ export function SettingsPage({
                         className="w-full text-left p-4 flex items-center justify-between hover:bg-red-50 transition-colors group"
                         onClick={() => {
                             if (window.confirm("Clear all data?")) {
-                                storage.clearAll();
-                                window.location.reload();
+                                onClearData();
                             }
                         }}
                     >

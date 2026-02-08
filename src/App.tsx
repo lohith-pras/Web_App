@@ -9,6 +9,7 @@ import { useTriggers } from './hooks/useTriggers';
 import { useGoal } from './hooks/useGoal';
 import { useToast } from './hooks/useToast';
 import { autoCleanup } from './services/dataCleanup';
+import { storage } from './services/storage';
 import type { TabType } from './types';
 
 function App() {
@@ -24,8 +25,8 @@ function App() {
 
   // Custom hooks
   const { logs, addLog } = useSmokingLogs();
-  const { allTriggers, customTriggers, addCustomTrigger, deleteCustomTrigger } = useTriggers();
-  const { monthlyGoal, setMonthlyGoal, currentMonthCount, progress } = useGoal(logs);
+  const { allTriggers } = useTriggers();
+  const { monthlyGoal, currentMonthCount, progress } = useGoal(logs);
   const { show, message, showToast, hideToast } = useToast();
 
   // Handle adding a log
@@ -34,9 +35,9 @@ function App() {
     showToast('Entry logged');
   };
 
-  // Handle clearing all data
   const handleClearData = () => {
-    // This will be handled by page reload after storage.clearAll()
+    storage.clearAll();
+    window.location.reload();
   };
 
   return (
@@ -61,11 +62,6 @@ function App() {
       {activeTab === 'settings' && (
         <SettingsPage
           monthlyGoal={monthlyGoal}
-          onGoalChange={setMonthlyGoal}
-          currentProgress={progress}
-          customTriggers={customTriggers}
-          onAddTrigger={addCustomTrigger}
-          onDeleteTrigger={deleteCustomTrigger}
           logs={logs}
           onClearData={handleClearData}
         />

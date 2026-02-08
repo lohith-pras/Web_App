@@ -8,7 +8,7 @@ description: Frontend-specific agent instructions for React/TypeScript developme
 
 - **Framework:** React 18+ with TypeScript
 - **Build Tool:** Vite
-- **Styling:** Tailwind CSS v3.x
+- **Styling:** Tailwind CSS v4.x
 - **Charts:** Recharts
 - **State Management:** React hooks (useState, useEffect, custom hooks)
 - **Routing:** Simple tab-based navigation (no react-router needed)
@@ -36,39 +36,40 @@ description: Frontend-specific agent instructions for React/TypeScript developme
 ### Component Categories
 
 #### Layout Components
+
 **Location:** `src/components/layout/`
 
 - `Layout.tsx` - Main app wrapper with bottom nav
 - `BottomNav.tsx` - Three-tab navigation (Log, Insights, Settings)
 
 **Responsibilities:**
+
 - Page routing/switching
 - Persistent navigation
 - Responsive layout structure
 
 #### Logging Components
+
 **Location:** `src/components/logging/`
 
-- `QuickLogButton.tsx` - Primary CTA for logging
 - `TriggerSelectionModal.tsx` - Trigger picker with grid layout
-- `TodayCount.tsx` - Display today's cigarette count
 
 **Key Requirements:**
+
 - **Speed:** User must log in <3 seconds (2 taps)
 - **Feedback:** Immediate visual confirmation
 - **Accessibility:** Large touch targets, clear labels
 
 #### Dashboard Components
+
 **Location:** `src/components/dashboard/`
 
 - `TimePeriodToggle.tsx` - Filter: 7/30/180/all days
 - `TriggerBreakdownChart.tsx` - Pie/bar chart of triggers
 - `DailyTrendChart.tsx` - Line chart of daily counts
-- `TimeOfDayChart.tsx` - Bar chart by hour
-- `WeekComparison.tsx` - This week vs last week
-- `StatsCards.tsx` - Key metrics display
 
 **Chart Guidelines:**
+
 - Use Recharts components
 - Responsive sizing (ResponsiveContainer)
 - Calming color palette
@@ -76,62 +77,75 @@ description: Frontend-specific agent instructions for React/TypeScript developme
 - Loading states for calculations
 
 #### Settings Components
-**Location:** `src/components/settings/`
 
-- `GoalSetting.tsx` - Monthly goal configuration
-- `TriggerManagement.tsx` - Add/edit/delete custom triggers
-- `DataExport.tsx` - CSV export button
-- `DataClear.tsx` - Clear all data with confirmation
+**Location:** `src/pages/`
+
+- `SettingsPage.tsx` - Preferences and data controls (in-page layout)
 
 **UX Focus:**
+
 - Clear labels and instructions
 - Confirmation dialogs for destructive actions
 - Success feedback for all actions
 
 #### Common Components
+
 **Location:** `src/components/common/`
 
 - `Toast.tsx` - Brief success/error messages
-- `ConfirmDialog.tsx` - Reusable confirmation modal
+- `GlassCard.tsx` - Reusable card container
 
 ## Custom Hooks
 
 ### State Management Hooks
 
 #### `useSmokingLogs.ts`
+
 ```typescript
 export function useSmokingLogs() {
   const [logs, setLogs] = useState<SmokingLog[]>([]);
-  
-  const addLog = (trigger: string) => { /* ... */ };
-  const deleteLog = (id: string) => { /* ... */ };
-  const getLogsForPeriod = (period: TimePeriod) => { /* ... */ };
-  
+
+  const addLog = (trigger: string) => {
+    /* ... */
+  };
+  const deleteLog = (id: string) => {
+    /* ... */
+  };
+  const getLogsForPeriod = (period: TimePeriod) => {
+    /* ... */
+  };
+
   return { logs, addLog, deleteLog, getLogsForPeriod };
 }
 ```
 
 #### `useTriggers.ts`
+
 ```typescript
 export function useTriggers() {
   const [customTriggers, setCustomTriggers] = useState<string[]>([]);
-  
+
   const allTriggers = [...DEFAULT_TRIGGERS, ...customTriggers];
-  const addCustomTrigger = (name: string) => { /* ... */ };
-  const deleteCustomTrigger = (id: string) => { /* ... */ };
-  
+  const addCustomTrigger = (name: string) => {
+    /* ... */
+  };
+  const deleteCustomTrigger = (id: string) => {
+    /* ... */
+  };
+
   return { allTriggers, customTriggers, addCustomTrigger, deleteCustomTrigger };
 }
 ```
 
 #### `useGoal.ts`
+
 ```typescript
 export function useGoal() {
   const [monthlyGoal, setMonthlyGoal] = useState<number>(0);
-  
+
   const progress = calculateProgress();
   const status = getStatus(); // 'green' | 'yellow' | 'red'
-  
+
   return { monthlyGoal, setMonthlyGoal, progress, status };
 }
 ```
@@ -147,6 +161,7 @@ export function useGoal() {
 ### Tailwind CSS Conventions
 
 #### Color Palette (Calming, Supportive)
+
 ```javascript
 // tailwind.config.js
 colors: {
@@ -169,24 +184,33 @@ colors: {
 ```
 
 #### Spacing & Sizing
+
 - Touch targets: `min-h-[44px] min-w-[44px]`
 - Card padding: `p-4` or `p-6`
 - Section spacing: `space-y-6`
 - Grid gaps: `gap-4`
 
 #### Responsive Breakpoints
+
 ```css
 /* Mobile first - default styles for 320px+ */
-.component { /* base styles */ }
+.component {
+  /* base styles */
+}
 
 /* Tablet */
-@media (min-width: 640px) { /* sm: */ }
+@media (min-width: 640px) {
+  /* sm: */
+}
 
 /* Desktop */
-@media (min-width: 1024px) { /* lg: */ }
+@media (min-width: 1024px) {
+  /* lg: */
+}
 ```
 
 #### Component Patterns
+
 ```tsx
 // Card component
 <div className="bg-white rounded-lg shadow-md p-6">
@@ -217,6 +241,7 @@ colors: {
 ## TypeScript Patterns
 
 ### Type Definitions
+
 **Location:** `src/types/index.ts`
 
 ```typescript
@@ -237,11 +262,12 @@ export interface TriggerSelectionModalProps {
 }
 
 // Utility types
-export type TimePeriod = '7days' | '30days' | '6months' | 'all';
-export type GoalStatus = 'green' | 'yellow' | 'red';
+export type TimePeriod = "7days" | "30days" | "6months" | "all";
+export type GoalStatus = "green" | "yellow" | "red";
 ```
 
 ### Best Practices
+
 - Use `interface` for object shapes
 - Use `type` for unions, primitives
 - Avoid `any` - use `unknown` if type is truly unknown
@@ -253,12 +279,14 @@ export type GoalStatus = 'green' | 'yellow' | 'red';
 ### Supportive, Non-Judgmental Language
 
 #### ✅ Good Examples
+
 - "Entry logged" (not "Cigarette recorded")
 - "Today: 5 cigarettes" (neutral count)
 - "Data exported successfully"
 - "3 days below your average!" (celebrate wins)
 
 #### ❌ Avoid
+
 - "You failed again"
 - "Gave in to craving"
 - "Total money wasted"
@@ -266,6 +294,7 @@ export type GoalStatus = 'green' | 'yellow' | 'red';
 - Guilt-inducing cumulative stats
 
 ### Micro-Animations
+
 ```tsx
 // Success toast (fade in/out)
 <div className="
@@ -285,22 +314,26 @@ export type GoalStatus = 'green' | 'yellow' | 'red';
 ```
 
 ### Empty States
+
 Always provide helpful guidance when no data exists:
 
 ```tsx
-{logs.length === 0 ? (
-  <div className="text-center py-12 text-gray-500">
-    <p className="text-lg mb-2">No entries yet</p>
-    <p className="text-sm">Tap "Log Cigarette" to get started</p>
-  </div>
-) : (
-  <ChartComponent data={logs} />
-)}
+{
+  logs.length === 0 ? (
+    <div className="text-center py-12 text-gray-500">
+      <p className="text-lg mb-2">No entries yet</p>
+      <p className="text-sm">Tap "Log Cigarette" to get started</p>
+    </div>
+  ) : (
+    <ChartComponent data={logs} />
+  );
+}
 ```
 
 ## Data Flow
 
 ### Adding a Log Entry
+
 ```
 User taps "Log Cigarette"
   ↓
@@ -324,6 +357,7 @@ Update "Today: X" count
 ```
 
 ### Chart Data Updates
+
 ```
 User changes time period
   ↓
@@ -343,17 +377,21 @@ Recharts re-renders with new data
 ## Performance Optimization
 
 ### Code Splitting
+
 ```tsx
 // Lazy load chart components (heavy dependencies)
-const DailyTrendChart = lazy(() => import('./components/dashboard/DailyTrendChart'));
+const DailyTrendChart = lazy(
+  () => import("./components/dashboard/DailyTrendChart"),
+);
 
 // Use Suspense
 <Suspense fallback={<LoadingSpinner />}>
   <DailyTrendChart data={chartData} />
-</Suspense>
+</Suspense>;
 ```
 
 ### Memoization
+
 ```tsx
 // Expensive calculations
 const dailyAverage = useMemo(() => {
@@ -361,67 +399,70 @@ const dailyAverage = useMemo(() => {
 }, [logs, period]);
 
 // Event handlers
-const handleAddLog = useCallback((trigger: string) => {
-  addLog(trigger);
-  setShowModal(false);
-}, [addLog]);
+const handleAddLog = useCallback(
+  (trigger: string) => {
+    addLog(trigger);
+    setShowModal(false);
+  },
+  [addLog],
+);
 ```
 
 ### Debouncing
+
 ```tsx
 // For rapid taps on log button
-const debouncedAddLog = useMemo(
-  () => debounce(addLog, 300),
-  [addLog]
-);
+const debouncedAddLog = useMemo(() => debounce(addLog, 300), [addLog]);
 ```
 
 ## PWA Implementation
 
 ### Service Worker (vite-plugin-pwa)
+
 ```typescript
 // vite.config.ts
-import { VitePWA } from 'vite-plugin-pwa';
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: "autoUpdate",
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
+            handler: "CacheFirst",
             options: {
-              cacheName: 'google-fonts-cache',
+              cacheName: "google-fonts-cache",
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              }
-            }
-          }
-        ]
-      }
-    })
-  ]
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+        ],
+      },
+    }),
+  ],
 });
 ```
 
 ### Offline Detection
+
 ```tsx
 const [isOnline, setIsOnline] = useState(navigator.onLine);
 
 useEffect(() => {
   const handleOnline = () => setIsOnline(true);
   const handleOffline = () => setIsOnline(false);
-  
-  window.addEventListener('online', handleOnline);
-  window.addEventListener('offline', handleOffline);
-  
+
+  window.addEventListener("online", handleOnline);
+  window.addEventListener("offline", handleOffline);
+
   return () => {
-    window.removeEventListener('online', handleOnline);
-    window.removeEventListener('offline', handleOffline);
+    window.removeEventListener("online", handleOnline);
+    window.removeEventListener("offline", handleOffline);
   };
 }, []);
 ```
@@ -429,6 +470,7 @@ useEffect(() => {
 ## Testing Checklist
 
 ### Component Testing
+
 - [ ] All components render without errors
 - [ ] Props are properly typed
 - [ ] Event handlers work correctly
@@ -436,6 +478,7 @@ useEffect(() => {
 - [ ] Loading states display properly
 
 ### Responsive Testing
+
 - [ ] Works on 320px width (iPhone SE)
 - [ ] Works on 375px width (iPhone 12/13)
 - [ ] Works on 428px width (iPhone 14 Pro Max)
@@ -443,6 +486,7 @@ useEffect(() => {
 - [ ] No horizontal scrolling at any size
 
 ### Interaction Testing
+
 - [ ] Buttons are touch-friendly (44px+)
 - [ ] Modals open/close correctly
 - [ ] Forms validate input
@@ -450,6 +494,7 @@ useEffect(() => {
 - [ ] Animations are smooth (60fps)
 
 ### Data Testing
+
 - [ ] Logs persist after page reload
 - [ ] Custom triggers save correctly
 - [ ] Goals update properly
@@ -459,10 +504,11 @@ useEffect(() => {
 ## Common Patterns
 
 ### Modal Pattern
+
 ```tsx
 export function TriggerSelectionModal({ isOpen, onClose, onSelect }: Props) {
   if (!isOpen) return null;
-  
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
@@ -474,6 +520,7 @@ export function TriggerSelectionModal({ isOpen, onClose, onSelect }: Props) {
 ```
 
 ### Toast Pattern
+
 ```tsx
 export function Toast({ message, show, onClose }: Props) {
   useEffect(() => {
@@ -482,13 +529,15 @@ export function Toast({ message, show, onClose }: Props) {
       return () => clearTimeout(timer);
     }
   }, [show, onClose]);
-  
+
   return (
-    <div className={`
+    <div
+      className={`
       fixed bottom-20 left-1/2 -translate-x-1/2
       transition-opacity duration-300
-      ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-    `}>
+      ${show ? "opacity-100" : "opacity-0 pointer-events-none"}
+    `}
+    >
       {message}
     </div>
   );
@@ -507,25 +556,25 @@ export function Toast({ message, show, onClose }: Props) {
 
 ```tsx
 // 1. React imports
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // 2. Third-party libraries
-import { PieChart, Pie, Cell } from 'recharts';
+import { PieChart, Pie, Cell } from "recharts";
 
 // 3. Local components
-import { Toast } from '../common/Toast';
+import { Toast } from "../common/Toast";
 
 // 4. Hooks
-import { useSmokingLogs } from '../../hooks/useSmokingLogs';
+import { useSmokingLogs } from "../../hooks/useSmokingLogs";
 
 // 5. Utils/services
-import { formatDate } from '../../utils/dateHelpers';
+import { formatDate } from "../../utils/dateHelpers";
 
 // 6. Types
-import type { SmokingLog, TimePeriod } from '../../types';
+import type { SmokingLog, TimePeriod } from "../../types";
 
 // 7. Constants
-import { DEFAULT_TRIGGERS } from '../../constants/triggers';
+import { DEFAULT_TRIGGERS } from "../../constants/triggers";
 ```
 
 ## Key Reminders
