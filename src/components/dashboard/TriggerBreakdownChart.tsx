@@ -49,6 +49,7 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                     <Legend
                         wrapperStyle={{ fontSize: '12px' }}
                         formatter={(value, entry: LegendPayload) => (
+                            // entry.payload.value is optional in LegendPayload type, so we use nullish coalescing for safety
                             <span className="text-gray-700 dark:text-gray-300">{`${value} (${entry.payload?.value ?? 0})`}</span>
                         )}
                     />
