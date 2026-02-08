@@ -19,10 +19,11 @@ export function TimePeriodToggle({ selected, onChange }: TimePeriodToggleProps) 
                 <button
                     key={period.value}
                     onClick={() => onChange(period.value)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all duration-200 relative overflow-hidden ${selected === period.value
-                        ? 'text-white bg-primary-500 dark:bg-primary-600 shadow-sm'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700'
-                        }`}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium transition-all duration-300 relative overflow-hidden ${
+                        selected === period.value
+                            ? 'text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg'
+                            : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                     {period.label}
                 </button>

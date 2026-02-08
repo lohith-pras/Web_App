@@ -5,12 +5,12 @@ interface TriggerBreakdownChartProps {
     data: ChartDataPoint[];
 }
 
-const COLORS = ['#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#10b981'];
+const COLORS = ['#8b5cf6', '#6366f1', '#3b82f6', '#ec4899', '#f59e0b', '#10b981'];
 
 export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
     if (data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
+            <div className="flex items-center justify-center h-48 text-gray-400">
                 <p>No data yet. Start logging to see your triggers.</p>
             </div>
         );
@@ -28,6 +28,8 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
+                        strokeWidth={2}
+                        stroke="rgba(255,255,255,0.1)"
                     >
                         {data.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -35,16 +37,18 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                     </Pie>
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: 'var(--tooltip-bg)',
-                            border: '1px solid var(--tooltip-border)',
-                            borderRadius: '8px',
-                            color: 'var(--tooltip-text)',
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(12px)',
+                            color: '#f1f5f9',
+                            padding: '8px 12px',
                         }}
                     />
                     <Legend
                         wrapperStyle={{ fontSize: '12px' }}
                         formatter={(value, entry: any) => (
-                            <span className="text-gray-600 dark:text-gray-400">{`${value} (${entry.payload.value})`}</span>
+                            <span className="text-gray-300">{`${value} (${entry.payload.value})`}</span>
                         )}
                     />
                 </PieChart>
@@ -60,12 +64,15 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                         <div key={index} className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <div
-                                    className="w-3 h-3 rounded-full"
-                                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                    className="w-3 h-3 rounded-full shadow-lg"
+                                    style={{ 
+                                        backgroundColor: COLORS[index % COLORS.length],
+                                        boxShadow: `0 0 8px ${COLORS[index % COLORS.length]}40`
+                                    }}
                                 />
-                                <span className="text-gray-600 dark:text-gray-400 text-sm">{item.name}</span>
+                                <span className="text-gray-300 text-sm">{item.name}</span>
                             </div>
-                            <span className="text-gray-900 dark:text-white font-medium">{percentage}%</span>
+                            <span className="text-white font-medium">{percentage}%</span>
                         </div>
                     );
                 })}

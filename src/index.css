@@ -2,15 +2,14 @@
 @config "../tailwind.config.js";
 
 :root {
-  --tooltip-bg: #ffffff;
-  --tooltip-border: #e5e7eb;
-  --tooltip-text: #1f2937;
+  --tooltip-bg: rgba(15, 23, 42, 0.9);
+  --tooltip-border: rgba(255, 255, 255, 0.1);
+  --tooltip-text: #f1f5f9;
 }
 
-.dark {
-  --tooltip-bg: #1e293b;
-  --tooltip-border: #334155;
-  --tooltip-text: #f1f5f9;
+@theme {
+  --color-glass-light: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -25,13 +24,61 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f3f4f6;
   min-height: 100vh;
   transition: background-color 0.3s ease;
 }
 
-.dark body {
-  background: #0f172a;
+/* Dark mode (default) - Aurora Glassmorphism */
+body {
+  background: #0a051a;
+  position: relative;
+  color: #E2E8F0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.3), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.2), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15), transparent 50%);
+  animation: aurora 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes aurora {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -30px) rotate(120deg); }
+  66% { transform: translate(-30px, 30px) rotate(240deg); }
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Light mode */
+html:not(.dark) body {
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #fae8ff 100%);
+  color: #0f172a;
+}
+
+html:not(.dark) body::before {
+  display: none;
+}
+
+/* Dark mode for root element */
+html.dark {
+  color-scheme: dark;
+}
+
+html:not(.dark) {
+  color-scheme: light;
 }
 
 
@@ -57,44 +104,84 @@ body {
   animation: slide-up 0.3s ease-out;
 }
 
+/* Aurora blob animations */
+@keyframes aurora {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 0.4;
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+    opacity: 0.35;
+  }
+}
+
+@keyframes aurora-slow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(-40px, 40px) scale(1.15);
+    opacity: 0.35;
+  }
+}
+
+@keyframes aurora-slower {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(50px, -30px) scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+.animate-aurora {
+  animation: aurora 20s ease-in-out infinite;
+}
+
+.animate-aurora-slow {
+  animation: aurora-slow 25s ease-in-out infinite;
+}
+
+.animate-aurora-slower {
+  animation: aurora-slower 30s ease-in-out infinite;
+}
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f3f4f6;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: rgba(15, 23, 42, 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+  backdrop-filter: blur(10px);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Focus styles */
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid rgba(139, 92, 246, 0.6);
   outline-offset: 2px;
-}
-
-.dark button:focus-visible,
-.dark input:focus-visible {
-  outline-color: #34d399;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }
