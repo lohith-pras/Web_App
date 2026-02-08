@@ -75,7 +75,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
     }
 
     return (
-        <div className="min-h-screen px-4 pt-8 pb-32 flex flex-col gap-6">
+        <div className="min-h-screen px-4 md:px-6 lg:px-8 pt-8 pb-32 md:pb-8 flex flex-col gap-6">
             {/* Header */}
             <div className="flex items-center gap-3">
                 {/* Elevated glass icon background */}
@@ -115,7 +115,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
             </GlassCard>
 
             {/* Trends */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <GlassCard className="flex flex-col py-5">
                     {/* Apple HIG: Tertiary label */}
                     <span className="text-xs text-label-tertiary font-semibold uppercase tracking-wider mb-2">{t('insights.stats.average')}</span>
@@ -128,20 +128,22 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
             </div>
 
             {/* Charts */}
-            <GlassCard className="py-6">
-                {/* Apple HIG: Secondary label for chart headers */}
-                <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.dailyTrend')}</h3>
-                <div className="-mx-2">
-                    <DailyTrendChart data={dailyTrendData} />
-                </div>
-            </GlassCard>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <GlassCard className="py-6">
+                    {/* Apple HIG: Secondary label for chart headers */}
+                    <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.dailyTrend')}</h3>
+                    <div className="-mx-2 h-64 lg:h-80">
+                        <DailyTrendChart data={dailyTrendData} />
+                    </div>
+                </GlassCard>
 
-            <GlassCard className="py-6">
-                <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.triggerBreakdown')}</h3>
-                <div>
-                    <TriggerBreakdownChart data={triggerData} />
-                </div>
-            </GlassCard>
+                <GlassCard className="py-6">
+                    <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.triggerBreakdown')}</h3>
+                    <div className="h-64 lg:h-80">
+                        <TriggerBreakdownChart data={triggerData} />
+                    </div>
+                </GlassCard>
+            </div>
         </div>
     );
 }

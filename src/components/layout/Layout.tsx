@@ -1,6 +1,7 @@
 
 import type { ReactNode } from 'react';
 import { BottomNav } from './BottomNav';
+import { SideNav } from './SideNav';
 
 interface LayoutProps {
     children: ReactNode;
@@ -19,10 +20,14 @@ export function Layout({ children }: LayoutProps) {
             {/* Subtle radial gradient overlay */}
             <div className="fixed inset-0 [background-image:radial-gradient(circle,transparent,transparent,rgb(241_245_249/0.5)_100%)] dark:[background-image:radial-gradient(circle,transparent,transparent,rgb(0_0_0/0.5)_100%)] -z-10 transition-colors duration-300" />
 
-            <main className="relative z-10 pb-28 max-w-md mx-auto min-h-screen flex flex-col p-4">
+            {/* Desktop Side Navigation */}
+            <SideNav />
+
+            <main className="relative z-10 pb-28 md:pb-8 ml-0 md:ml-80 max-w-md md:max-w-2xl lg:max-w-5xl mx-auto md:mr-auto min-h-screen flex flex-col p-4 md:p-6 lg:p-8">
                 {children}
             </main>
 
+            {/* Mobile Bottom Navigation */}
             <BottomNav />
         </div>
     );

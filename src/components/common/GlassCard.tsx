@@ -24,7 +24,7 @@ export function GlassCard({ children, className, onClick }: GlassCardProps) {
             tabIndex={onClick ? 0 : undefined}
             onKeyDown={onClick ? handleKeyDown : undefined}
             className={cn(
-                "relative overflow-hidden rounded-2xl px-6 py-6",
+                "relative overflow-hidden rounded-2xl md:rounded-3xl px-6 py-6 md:px-8 md:py-8",
                 // Apple HIG: Softened white in light mode, elevated background in dark mode
                 "bg-white/70 dark:bg-white/[0.08]",
                 "backdrop-blur-[20px] backdrop-saturate-150",

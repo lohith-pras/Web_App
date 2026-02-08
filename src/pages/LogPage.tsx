@@ -48,7 +48,7 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
     }, [logs, t]);
 
     return (
-        <div className="flex flex-col min-h-screen justify-between p-6 pb-32">
+        <div className="flex flex-col min-h-screen justify-start gap-y-8 p-6 md:p-8 lg:p-10 pb-32 md:pb-8">
             {/* TOP: Header & Large Progress Circle */}
             <header className="flex-none">
                 <div className="flex items-center justify-between w-full mb-6">
@@ -67,10 +67,10 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
                 </div>
 
                 {/* Large Circular Progress - Primary Visual Anchor */}
-                <div className="flex justify-center py-10">
+                <div className="flex justify-center py-10 pb-20 md:pb-12">
                     <div
-                        className="relative flex items-center justify-center"
-                        style={{ width: 280, height: 280 }}
+                        className="relative flex items-center justify-center w-[280px] h-[280px] md:w-[320px] md:h-[320px]"
+                        style={{ width: 'inherit', height: 'inherit' }}
                         role="progressbar"
                         aria-valuenow={progress}
                         aria-valuemin={0}
@@ -140,10 +140,10 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
             </header>
 
             {/* MIDDLE: Recent Triggers Section */}
-            <section className="flex-1">
+            <section className="flex-1 mt-8 md:mt-12">
                 {/* Apple HIG: Tertiary label for section headers */}
-                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-6">{t('log.triggers')}</h3>
-                <div className="grid grid-cols-4 gap-3">
+                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-8">{t('log.triggers')}</h3>
+                <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
                     {isLoading ? (
                         Array.from({ length: 4 }).map((_, i) => (
                             <SkeletonCard key={i} className="min-h-[90px]" />
@@ -165,7 +165,7 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
             </section>
 
             {/* BOTTOM: Fixed Floating Action Button */}
-            <div className="fixed bottom-24 left-0 right-0 z-10 px-6">
+            <div className="fixed bottom-24 md:bottom-8 left-0 right-0 md:left-80 z-10 px-6">
                 <div className="max-w-md mx-auto">
                     <button
                         onClick={() => setShowModal(true)}
