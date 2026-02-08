@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../contexts/themeContext';
+import { ThemeContext } from '../contexts/ThemeContextValue';
 
 /**
  * Hook for accessing dark mode state and theme controls

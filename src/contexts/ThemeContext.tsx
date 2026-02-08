@@ -1,7 +1,7 @@
 import { useState, useEffect, useSyncExternalStore, type ReactNode } from 'react';
 import { storage } from '../services/storage';
 import type { ThemeMode } from '../types';
-import { ThemeContext } from './themeContext';
+import { ThemeContext } from './ThemeContextValue';
 
 function getSystemPreference(): boolean {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
