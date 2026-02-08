@@ -1,5 +1,5 @@
 
-import type { ReactNode } from 'react';
+import type { ReactNode, KeyboardEvent } from 'react';
 import { cn } from '../../utils/cn';
 
 interface GlassCardProps {
@@ -10,7 +10,7 @@ interface GlassCardProps {
 
 // Apple HIG: Uses elevated background for layered glassmorphic cards
 export function GlassCard({ children, className, onClick }: GlassCardProps) {
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
         if (onClick && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             onClick();
