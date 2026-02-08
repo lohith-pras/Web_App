@@ -28,7 +28,7 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* Aurora Glassmorphism styles */
+/* Dark mode - Aurora Glassmorphism */
 body {
   background: #0a051a;
   position: relative;
