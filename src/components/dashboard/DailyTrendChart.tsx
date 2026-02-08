@@ -34,11 +34,13 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
         <div>
             {data.length >= 14 && (
                 <div className={`px-3 py-1.5 rounded-full text-sm font-semibold mb-4 inline-block ${
-                    change < 0 
-                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30' 
-                        : 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/30'
+                    change > 0 
+                        ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/30'
+                        : change < 0
+                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
+                        : 'bg-slate-500/20 text-slate-600 dark:text-slate-300 border border-slate-500/30'
                 }`}>
-                    {change < 0 ? '↓' : '↑'} {Math.abs(change)}% vs last week
+                    {change > 0 ? '↑' : change < 0 ? '↓' : '—'} {change === 0 ? '0' : Math.abs(change)}% vs last week
                 </div>
             )}
 

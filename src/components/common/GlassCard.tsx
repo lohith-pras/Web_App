@@ -10,9 +10,19 @@ interface GlassCardProps {
 
 // Apple HIG: Uses elevated background for layered glassmorphic cards
 export function GlassCard({ children, className, onClick }: GlassCardProps) {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onClick();
+        }
+    };
+
     return (
         <div
             onClick={onClick}
+            role={onClick ? "button" : undefined}
+            tabIndex={onClick ? 0 : undefined}
+            onKeyDown={onClick ? handleKeyDown : undefined}
             className={cn(
                 "relative overflow-hidden rounded-2xl px-6 py-6",
                 // Apple HIG: Softened white in light mode, elevated background in dark mode

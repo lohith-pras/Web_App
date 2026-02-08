@@ -26,7 +26,7 @@ export default {
                 },
                 // Apple HIG: Separator colors
                 separator: 'rgb(var(--color-separator) / <alpha-value>)',
-                // Brand colors with proper contrast (7:1 ratio for accessibility)
+                // Brand primary colors meet 7:1; status colors may follow different WCAG targets (e.g., 4.5:1) — verify as needed
                 primary: {
                     50: '#f0f9ff',
                     100: '#e0f2fe',

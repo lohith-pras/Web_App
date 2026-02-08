@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import type { TabType } from '../../types';
+import { useDarkMode } from '../../hooks/useDarkMode';
 
 interface BottomNavProps {
     activeTab: TabType;
@@ -48,6 +50,16 @@ const navItems: NavItem[] = [
 ];
 
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
+    const { isDark } = useDarkMode();
+    
+    // Theme-aware colors from CSS variables
+    const colors = useMemo(() => ({
+        active: isDark ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)',
+        inactive: isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
+        activeShadow: isDark ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))' : 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))',
+        inactiveShadow: 'none',
+    }), [isDark]);
+    
     return (
         <nav className="fixed bottom-6 left-0 right-0 z-50 px-6 safe-area-inset-bottom">
             {/* Apple HIG: Elevated glass background for navigation */}
@@ -77,8 +89,8 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
                             <motion.div
                                 className="relative z-10"
                                 animate={{
-                                    color: activeTab === item.id ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.4)',
-                                    filter: activeTab === item.id ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))' : 'none',
+                                    color: activeTab === item.id ? colors.active : colors.inactive,
+                                    filter: activeTab === item.id ? colors.activeShadow : colors.inactiveShadow,
                                 }}
                                 transition={{
                                     duration: 0.3,
@@ -89,8 +101,8 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
                             <motion.span
                                 className="text-xs font-medium mt-1 relative z-10"
                                 animate={{
-                                    color: activeTab === item.id ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.4)',
-                                    filter: activeTab === item.id ? 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.4))' : 'none',
+                                    color: activeTab === item.id ? colors.active : colors.inactive,
+                                    filter: activeTab === item.id ? colors.activeShadow : colors.inactiveShadow,
                                 }}
                                 transition={{
                                     duration: 0.3,

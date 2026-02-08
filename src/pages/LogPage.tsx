@@ -55,7 +55,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                         </span>
                     </div>
                     {/* Avatar with elevated glass effect */}
-                    <div className="relative overflow-hidden bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 w-10 h-10 flex items-center justify-center rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
+                    <div className="relative overflow-hidden bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-t-white/30 dark:border-t-white/10 border-l border-l-white/30 dark:border-l-white/10 border-b border-b-white/10 dark:border-b-white/5 border-r border-r-white/10 dark:border-r-white/5 w-10 h-10 flex items-center justify-center rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-emerald-500 to-indigo-500" />
                     </div>
                 </div>
