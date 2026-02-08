@@ -1,4 +1,5 @@
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area } from 'recharts';
+import { useDarkMode } from '../../hooks/useDarkMode';
 import type { DailyDataPoint } from '../../types';
 
 interface DailyTrendChartProps {
@@ -6,13 +7,12 @@ interface DailyTrendChartProps {
 }
 
 export function DailyTrendChart({ data }: DailyTrendChartProps) {
+    const { isDark } = useDarkMode();
+    
     if (data.length === 0) {
         return (
-            <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-gray-800">
-                <h3 className="text-lg font-semibold text-white mb-4">Daily Trend</h3>
-                <div className="flex items-center justify-center h-48 text-gray-500">
-                    <p>No data yet. Start logging to see trends.</p>
-                </div>
+            <div className="flex items-center justify-center h-48 text-gray-400">
+                <p>No data yet. Start logging to see trends.</p>
             </div>
         );
     }
@@ -22,55 +22,61 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
     const previousAvg = data.slice(-14, -7).reduce((sum, d) => sum + d.count, 0) / 7;
     const change = previousAvg > 0 ? Math.round(((recentAvg - previousAvg) / previousAvg) * 100) : 0;
 
+    // Theme-dependent colors
+    const gridStroke = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.1)';
+    const axisStroke = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)';
+    const tickFill = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.6)';
+    const tooltipBg = isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.95)';
+    const tooltipBorder = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const tooltipColor = isDark ? '#f1f5f9' : '#0f172a';
+
     return (
-        <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-gray-800">
-            <div className="flex items-center justify-between mb-4">
-                <div>
-                    <h3 className="text-lg font-semibold text-white">Daily Trend</h3>
-                    <p className="text-gray-400 text-sm">Last 7 Days</p>
+        <div>
+            {data.length >= 14 && (
+                <div className={`px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block ${
+                    change < 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                }`}>
+                    {change < 0 ? '↓' : '↑'} {Math.abs(change)}% vs last week
                 </div>
-                {data.length >= 14 && (
-                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${change < 0 ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
-                        }`}>
-                        {change < 0 ? '↓' : '↑'} {Math.abs(change)}% vs last week
-                    </div>
-                )}
-            </div>
+            )}
 
             <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={data}>
                     <defs>
-                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                        <linearGradient id="auroraGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4} />
+                            <stop offset="50%" stopColor="#6366f1" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} strokeOpacity={0.1} />
                     <XAxis
                         dataKey="date"
-                        stroke="#6b7280"
-                        tick={{ fill: '#6b7280', fontSize: 12 }}
+                        stroke={axisStroke}
+                        tick={{ fill: tickFill, fontSize: 12 }}
                         tickFormatter={(value) => {
                             const date = new Date(value);
                             return ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()];
                         }}
                     />
-                    <YAxis stroke="#6b7280" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                    <YAxis stroke={axisStroke} tick={{ fill: tickFill, fontSize: 12 }} />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: '#1a1a1a',
-                            border: '1px solid #2a2a2a',
-                            borderRadius: '8px',
-                            color: '#fff',
+                            backgroundColor: tooltipBg,
+                            border: `1px solid ${tooltipBorder}`,
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(12px)',
+                            color: tooltipColor,
+                            padding: '8px 12px',
                         }}
                         labelFormatter={(value) => new Date(value).toLocaleDateString()}
                     />
                     <Area
                         type="monotone"
                         dataKey="count"
-                        stroke="#10b981"
-                        strokeWidth={2}
-                        fill="url(#colorCount)"
+                        stroke="url(#auroraGradient)"
+                        strokeWidth={3}
+                        fill="url(#auroraGradient)"
                     />
                 </AreaChart>
             </ResponsiveContainer>

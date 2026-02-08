@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
     CUSTOM_TRIGGERS: 'custom_triggers',
     MONTHLY_GOAL: 'monthly_goal',
     NOTIFICATIONS: 'notification_settings',
+    DARK_MODE: 'dark_mode',
 } as const;
 
 export const DEFAULT_MONTHLY_GOAL = 200;

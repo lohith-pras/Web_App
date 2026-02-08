@@ -23,6 +23,7 @@ export interface ToastProps {
 export type TimePeriod = '7days' | '30days' | 'all';
 export type GoalStatus = 'green' | 'yellow' | 'red';
 export type TabType = 'log' | 'insights' | 'settings';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 export interface ChartDataPoint {
     name: string;

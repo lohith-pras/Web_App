@@ -1,9 +1,8 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useId } from 'react';
 import { TriggerSelectionModal } from '../components/logging/TriggerSelectionModal';
 import type { Trigger, SmokingLog } from '../types';
 import { formatDate } from '../utils/dateHelpers';
-import { GlassCard } from '../components/common/GlassCard';
 
 interface LogPageProps {
     triggers: Trigger[];
@@ -13,6 +12,7 @@ interface LogPageProps {
 
 export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
     const [showModal, setShowModal] = useState(false);
+    const progressGradientId = useId();
 
     // Get today's count
     const today = formatDate(new Date());
@@ -41,90 +41,114 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
     }, [logs]);
 
     return (
-        <div className="flex flex-col items-center pt-8 px-4 w-full">
-            {/* Header */}
-            <div className="flex items-center justify-between w-full mb-8">
-                <div className="flex flex-col">
-                    <h1 className="text-3xl font-thin text-gray-900 tracking-wider">QuitTrack</h1>
-                    <span className="text-primary-500 text-sm font-medium tracking-wide">
-                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-                    </span>
+        <div className="flex flex-col min-h-screen justify-between p-6 pb-32">
+            {/* TOP: Header & Large Progress Circle */}
+            <header className="flex-none">
+                <div className="flex items-center justify-between w-full mb-6">
+                    <div className="flex flex-col">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-wider">QuitTrack</h1>
+                        <span className="text-indigo-600 dark:text-indigo-300 text-xs font-medium tracking-wide">
+                            {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </span>
+                    </div>
+                    <div className="relative overflow-hidden bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 w-10 h-10 flex items-center justify-center rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-emerald-500 to-indigo-500" />
+                    </div>
                 </div>
-                <div className="bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full">
-                    {/* User Profile / Settings shortcut? */}
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-success-500 to-primary-500 opacity-80" />
-                </div>
-            </div>
 
-            {/* Main Progress */}
-            <div className="mb-12 relative flex items-center justify-center" style={{ width: 280, height: 280 }}>
-                {/* Background Circle */}
-                <svg
-                    width={280}
-                    height={280}
-                    viewBox="0 0 280 280"
-                    className="absolute rotate-[-90deg]"
-                >
-                    <circle
-                        cx={140}
-                        cy={140}
-                        r={126}
-                        fill="transparent"
-                        stroke="#e5e7eb"
-                        strokeWidth="12"
-                        strokeLinecap="round"
-                    />
-                    {/* Progress Circle */}
-                    <circle
-                        cx={140}
-                        cy={140}
-                        r={126}
-                        fill="transparent"
-                        stroke="#10b981"
-                        strokeWidth="12"
-                        strokeLinecap="round"
-                        strokeDasharray={2 * Math.PI * 126}
-                        strokeDashoffset={2 * Math.PI * 126 - (progress / 100) * 2 * Math.PI * 126}
-                        style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
-                    />
-                </svg>
-                {/* Center Content */}
-                <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                    <span className="text-6xl font-bold text-gray-900 mb-2">{todayCount}</span>
-                    <span className="text-sm text-gray-600 uppercase tracking-widest">Cigarettes</span>
-                    <span className="text-xs text-success-500 mt-2 font-medium">
-                        Last: {timeSinceLastSmoke}
-                    </span>
+                {/* Large Circular Progress - Primary Visual Anchor */}
+                <div className="flex justify-center py-10">
+                    <div 
+                        className="relative flex items-center justify-center" 
+                        style={{ width: 280, height: 280 }}
+                        role="progressbar"
+                        aria-valuenow={progress}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`${todayCount} cigarettes smoked today. Last smoked: ${timeSinceLastSmoke}`}
+                    >
+                        {/* Glassmorphic Circle Background */}
+                        <div className="absolute inset-0 bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]" />
+                        
+                        {/* Background Circle */}
+                        <svg
+                            width={280}
+                            height={280}
+                            viewBox="0 0 280 280"
+                            className="absolute rotate-[-90deg]"
+                        >
+                            <circle
+                                cx={140}
+                                cy={140}
+                                r={126}
+                                fill="transparent"
+                                stroke="rgba(148,163,184,0.2)"
+                                strokeWidth="12"
+                                strokeLinecap="round"
+                                className="dark:stroke-white/10"
+                            />
+                            {/* Progress Circle */}
+                            <circle
+                                cx={140}
+                                cy={140}
+                                r={126}
+                                fill="transparent"
+                                stroke={`url(#${progressGradientId})`}
+                                strokeWidth="12"
+                                strokeLinecap="round"
+                                strokeDasharray={2 * Math.PI * 126}
+                                strokeDashoffset={2 * Math.PI * 126 - (progress / 100) * 2 * Math.PI * 126}
+                                style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
+                            />
+                            <defs>
+                                <linearGradient id={progressGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stopColor="#10b981" />
+                                    <stop offset="50%" stopColor="#6366f1" />
+                                    <stop offset="100%" stopColor="#8b5cf6" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        {/* Center Content */}
+                        <div className="relative z-10 flex flex-col items-center justify-center text-center">
+                            <span className="text-6xl font-bold text-gray-900 dark:text-white mb-2">{todayCount}</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-300 uppercase tracking-widest">Cigarettes</span>
+                            <span className="text-xs text-emerald-600 dark:text-emerald-300 mt-2 font-medium">
+                                Last: {timeSinceLastSmoke}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </header>
 
-            {/* Quick Log Button */}
-            <button
-                onClick={() => setShowModal(true)}
-                className="w-full bg-white shadow-md rounded-lg py-6 mb-8 flex items-center justify-center gap-4 active:scale-95 transition-all group border border-gray-200 hover:shadow-lg"
-            >
-                <div className="w-12 h-12 rounded-full bg-success-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                </div>
-                <span className="text-xl font-medium text-gray-900">Log Cigarette</span>
-            </button>
-
-            {/* Recent / Context */}
-            <div className="w-full">
-                <h3 className="text-gray-500 text-sm font-medium mb-4 uppercase tracking-wider">Recent Triggers</h3>
-                <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
+            {/* MIDDLE: Recent Triggers Section */}
+            <section className="flex-1">
+                <h3 className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-300/60 mb-4">Triggers</h3>
+                <div className="grid grid-cols-4 gap-3">
                     {triggers.slice(0, 4).map(trigger => (
-                        <GlassCard
+                        <button
                             key={trigger.id}
                             onClick={() => onAddLog(trigger.name)}
-                            className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 gap-2 hover:border-primary-500"
+                            className="relative overflow-hidden flex flex-col items-center justify-center bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-2xl p-4 gap-2 hover:bg-white/70 dark:hover:bg-white/[0.12] hover:border-white/30 active:scale-95 transition-all min-h-[90px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]"
                         >
                             <span className="text-2xl">{trigger.icon}</span>
-                            <span className="text-xs text-gray-600">{trigger.name}</span>
-                        </GlassCard>
+                            <span className="text-xs text-gray-700 dark:text-gray-200 font-medium">{trigger.name}</span>
+                        </button>
                     ))}
+                </div>
+            </section>
+
+            {/* BOTTOM: Fixed Floating Action Button */}
+            <div className="fixed bottom-24 left-0 right-0 z-10 px-6">
+                <div className="max-w-md mx-auto">
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="relative overflow-hidden w-full py-3.5 rounded-2xl bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] font-semibold text-gray-900 dark:text-white text-base md:text-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all hover:bg-white/70 dark:hover:bg-white/[0.12] hover:border-white/30"
+                    >
+                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Log Cigarette</span>
+                    </button>
                 </div>
             </div>
 
