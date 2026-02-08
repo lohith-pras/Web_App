@@ -1,18 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { SmokingLog } from '../types';
-import { storage } from '../services/storage';
+// import { storage } from '../services/storage'; // Removed
 import { formatDate } from '../utils/dateHelpers';
+import { useLogsQuery, useAddLogMutation } from './useLogsQuery';
 
 export function useSmokingLogs() {
-    const [logs, setLogs] = useState<SmokingLog[]>(() => storage.getLogs());
-
-    // Save logs to localStorage whenever they change
-    useEffect(() => {
-        if (logs.length > 0 || storage.getLogs().length > 0) {
-            storage.saveLogs(logs);
-        }
-    }, [logs]);
+    const logsQuery = useLogsQuery();
+    const addLogMutation = useAddLogMutation();
 
     const addLog = useCallback((trigger: string) => {
         const now = new Date();
@@ -22,11 +17,14 @@ export function useSmokingLogs() {
             trigger,
             date: formatDate(now),
         };
-        setLogs(prev => [...prev, newLog]);
-    }, []);
+        addLogMutation.mutate(newLog);
+    }, [addLogMutation]);
 
     return {
-        logs,
+        logs: logsQuery.data ?? [],
+        isLoading: logsQuery.isLoading,
+        isError: logsQuery.isError,
+        error: logsQuery.error,
         addLog,
     };
 }

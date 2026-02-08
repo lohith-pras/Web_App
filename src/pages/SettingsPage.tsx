@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { GlassCard } from '../components/common/GlassCard';
 import type { SmokingLog, ThemeMode } from '../types';
 
+import { useTranslation } from 'react-i18next';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
+
 interface SettingsPageProps {
     monthlyGoal: number;
     logs: SmokingLog[];
@@ -10,6 +13,7 @@ interface SettingsPageProps {
     isDark: boolean;
     themeMode: ThemeMode;
     onSetTheme: (mode: ThemeMode) => void;
+    isLoading?: boolean;
 }
 
 export function SettingsPage({
@@ -19,14 +23,25 @@ export function SettingsPage({
     isDark,
     themeMode,
     onSetTheme,
+    isLoading = false,
 }: SettingsPageProps) {
+    const { t } = useTranslation();
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        );
+    }
+
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
     const getThemeLabel = () => {
         if (themeMode === 'system') {
-            return isDark ? 'Auto (Dark)' : 'Auto (Light)';
+            return isDark ? t('settings.theme.autoDark', { defaultValue: 'Auto (Dark)' }) : t('settings.theme.autoLight', { defaultValue: 'Auto (Light)' });
         }
-        return themeMode === 'dark' ? 'Dark' : 'Light';
+        return themeMode === 'dark' ? t('settings.theme.dark') : t('settings.theme.light');
     };
 
     return (
@@ -39,14 +54,14 @@ export function SettingsPage({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
-                <h1 className="text-2xl font-bold text-label-primary">Settings</h1>
+                <h1 className="text-2xl font-bold text-label-primary">{t('settings.title')}</h1>
             </div>
 
             {/* Profile / Goal Section */}
             <GlassCard className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-label-primary font-medium">Monthly Goal</h3>
-                    <p className="text-sm text-label-secondary">Current target: {monthlyGoal} cigs</p>
+                    <h3 className="text-label-primary font-medium">{t('settings.monthlyGoal.title')}</h3>
+                    <p className="text-sm text-label-secondary">{t('settings.monthlyGoal.description')}: {monthlyGoal} {t('log.cigarettes').toLowerCase()}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
                     {monthlyGoal}
@@ -55,42 +70,39 @@ export function SettingsPage({
 
             {/* Settings Group: App */}
             <div className="flex flex-col gap-2">
-                <h3 className="text-label-tertiary text-xs font-semibold uppercase tracking-wider ml-4">Preferences</h3>
+                <h3 className="text-label-tertiary text-xs font-semibold uppercase tracking-wider ml-4">{t('settings.preferences', { defaultValue: 'Preferences' })}</h3>
                 <GlassCard className="p-0 overflow-hidden divide-y divide-separator/20">
                     <div className="p-4 flex items-center justify-between">
-                        <span className="text-label-primary" id="notifications-label">Notifications</span>
+                        <span className="text-label-primary" id="notifications-label">{t('settings.notifications', { defaultValue: 'Notifications' })}</span>
                         <button
                             role="switch"
                             aria-checked={notificationsEnabled}
                             aria-labelledby="notifications-label"
                             onClick={() => setNotificationsEnabled(!notificationsEnabled)}
-                            className={`w-12 h-7 rounded-full transition-colors relative ${
-                                notificationsEnabled ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gray-300 dark:bg-white/10'
-                            }`}
+                            className={`w-12 h-7 rounded-full transition-colors relative ${notificationsEnabled ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gray-300 dark:bg-white/10'
+                                }`}
                         >
-                            <div 
+                            <div
                                 aria-hidden="true"
-                                className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${
-                                    notificationsEnabled ? 'translate-x-5' : ''
-                                }`} 
+                                className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${notificationsEnabled ? 'translate-x-5' : ''
+                                    }`}
                             />
                         </button>
                     </div>
                     <div className="p-4 flex items-center justify-between">
                         <div className="flex flex-col">
-                            <span className="text-label-primary">Theme</span>
+                            <span className="text-label-primary">{t('settings.theme.title')}</span>
                             <span className="text-xs text-label-secondary">{getThemeLabel()}</span>
                         </div>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => onSetTheme('light')}
                                 aria-label="Light theme"
-                                className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${
-                                    themeMode === 'light'
+                                className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${themeMode === 'light'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
                                         : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
-                                }`}
-                                title="Light mode"
+                                    }`}
+                                title={t('settings.theme.light')}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
@@ -100,12 +112,11 @@ export function SettingsPage({
                             <button
                                 onClick={() => onSetTheme('dark')}
                                 aria-label="Dark theme"
-                                className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${
-                                    themeMode === 'dark'
+                                className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${themeMode === 'dark'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
                                         : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
-                                }`}
-                                title="Dark mode"
+                                    }`}
+                                title={t('settings.theme.dark')}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
@@ -114,12 +125,11 @@ export function SettingsPage({
                             <button
                                 onClick={() => onSetTheme('system')}
                                 aria-label="System preference"
-                                className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${
-                                    themeMode === 'system'
+                                className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${themeMode === 'system'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
                                         : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
-                                }`}
-                                title="System preference"
+                                    }`}
+                                title={t('settings.theme.system')}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
@@ -133,21 +143,21 @@ export function SettingsPage({
 
             {/* Settings Group: Data */}
             <div className="flex flex-col gap-2">
-                <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-wider ml-4">Data</h3>
+                <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-wider ml-4">{t('settings.data.title')}</h3>
                 <GlassCard className="p-0 overflow-hidden divide-y divide-gray-200/50 dark:divide-white/5">
                     <button className="w-full text-left p-4 flex items-center justify-between hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors">
-                        <span className="text-gray-900 dark:text-white">Export Data</span>
-                        <span className="text-gray-600 dark:text-gray-300 text-sm">{logs.length} logs</span>
+                        <span className="text-gray-900 dark:text-white">{t('settings.data.export')}</span>
+                        <span className="text-gray-600 dark:text-gray-300 text-sm">{logs.length} {t('settings.data.logs', { defaultValue: 'logs' })}</span>
                     </button>
                     <button
                         className="w-full text-left p-4 flex items-center justify-between hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors group"
                         onClick={() => {
-                            if (window.confirm("Clear all data?")) {
+                            if (window.confirm(t('settings.data.confirmClear'))) {
                                 onClearData();
                             }
                         }}
                     >
-                        <span className="text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300">Clear All Data</span>
+                        <span className="text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300">{t('settings.data.clearAll')}</span>
                     </button>
                 </GlassCard>
             </div>

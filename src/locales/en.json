@@ -1,0 +1,87 @@
+{
+    "app": {
+        "name": "QuitTrack",
+        "tagline": "Track your journey"
+    },
+    "nav": {
+        "log": "Log",
+        "insights": "Insights",
+        "settings": "Settings"
+    },
+    "error": {
+        "title": "Something went wrong",
+        "message": "We encountered an unexpected error. Don't worry, your data is safe.",
+        "details": "Error details",
+        "returnHome": "Return to Home"
+    },
+    "log": {
+        "title": "QuitTrack",
+        "cigarettes": "Cigarettes",
+        "last": "Last",
+        "triggers": "Triggers",
+        "logButton": "Log Cigarette",
+        "noLogsYet": "No logs yet",
+        "timeAgo": {
+            "hours": "{{hours}}h {{minutes}}m ago",
+            "minutes": "{{minutes}}m ago"
+        },
+        "entryLogged": "Entry logged",
+        "modal": {
+            "title": "What triggered it?",
+            "skip": "Skip"
+        }
+    },
+    "insights": {
+        "title": "Insights",
+        "timePeriod": {
+            "7days": "7 Days",
+            "30days": "30 Days",
+            "all": "All Time"
+        },
+        "stats": {
+            "total": "Total",
+            "average": "Avg/Day",
+            "mostCommon": "Most Common"
+        },
+        "charts": {
+            "dailyTrend": "Daily Trend",
+            "triggerBreakdown": "Trigger Breakdown"
+        },
+        "noData": "No data available for this period"
+    },
+    "settings": {
+        "title": "Settings",
+        "monthlyGoal": {
+            "title": "Monthly Goal",
+            "description": "Set your target cigarettes per month",
+            "save": "Save Goal"
+        },
+        "customTriggers": {
+            "title": "Custom Triggers",
+            "add": "Add Custom Trigger",
+            "placeholder": "Trigger name",
+            "iconPlaceholder": "Icon (emoji)",
+            "create": "Create Trigger",
+            "delete": "Delete"
+        },
+        "theme": {
+            "title": "Theme",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System"
+        },
+        "data": {
+            "title": "Data Management",
+            "export": "Export Data",
+            "clearAll": "Clear All Data",
+            "confirmClear": "Are you sure you want to delete all data? This cannot be undone."
+        }
+    },
+    "common": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "save": "Save",
+        "delete": "Delete",
+        "close": "Close"
+    }
+}

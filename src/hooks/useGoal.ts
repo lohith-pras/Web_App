@@ -1,14 +1,15 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import type { SmokingLog } from '../types';
-import { storage } from '../services/storage';
+// import { storage } from '../services/storage'; // Removed
+import { useGoalQuery, useUpdateGoalMutation } from './useGoalQuery';
 import { DEFAULT_MONTHLY_GOAL } from '../constants/triggers';
 import { getMonthStart } from '../utils/dateHelpers';
 
 export function useGoal(logs: SmokingLog[]) {
-    const [monthlyGoal] = useState<number>(() => {
-        const saved = storage.getMonthlyGoal();
-        return saved > 0 ? saved : DEFAULT_MONTHLY_GOAL;
-    });
+    const goalQuery = useGoalQuery();
+    const updateGoalMutation = useUpdateGoalMutation();
+
+    const monthlyGoal = goalQuery.data && goalQuery.data > 0 ? goalQuery.data : DEFAULT_MONTHLY_GOAL;
 
     // Calculate current month's count
     const currentMonthCount = useMemo(() => {
@@ -29,5 +30,8 @@ export function useGoal(logs: SmokingLog[]) {
         monthlyGoal,
         currentMonthCount,
         progress,
+        isLoading: goalQuery.isLoading,
+        isError: goalQuery.isError,
+        updateGoal: updateGoalMutation.mutate,
     };
 }

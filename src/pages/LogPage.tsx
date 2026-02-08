@@ -5,13 +5,19 @@ import { TriggerIcon } from '../components/common/TriggerIcon';
 import type { Trigger, SmokingLog } from '../types';
 import { formatDate } from '../utils/dateHelpers';
 
+import { useTranslation } from 'react-i18next';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { SkeletonCard } from '../components/common/SkeletonCard';
+
 interface LogPageProps {
     triggers: Trigger[];
     onAddLog: (trigger: string) => void;
     logs: SmokingLog[];
+    isLoading?: boolean;
 }
 
-export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
+export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPageProps) {
+    const { t } = useTranslation();
     const [showModal, setShowModal] = useState(false);
     const progressGradientId = useId();
 
@@ -25,11 +31,11 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
     const progress = Math.min((todayCount / dailyLimit) * 100, 100);
 
     const timeSinceLastSmoke = useMemo(() => {
-        if (logs.length === 0) return 'No logs yet';
+        if (logs.length === 0) return t('log.noLogsYet');
 
         // Sort logs new to old
         const sortedLogs = [...logs].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-        if (sortedLogs.length === 0) return 'No logs yet';
+        if (sortedLogs.length === 0) return t('log.noLogsYet');
 
         const last = new Date(sortedLogs[0].timestamp);
         const now = new Date();
@@ -37,9 +43,9 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
         const diffMins = Math.floor(diffMs / 60000);
         const diffHrs = Math.floor(diffMins / 60);
 
-        if (diffHrs > 0) return `${diffHrs}h ${diffMins % 60}m ago`;
-        return `${diffMins}m ago`;
-    }, [logs]);
+        if (diffHrs > 0) return t('log.timeAgo.hours', { hours: diffHrs, minutes: diffMins % 60 });
+        return t('log.timeAgo.minutes', { minutes: diffMins });
+    }, [logs, t]);
 
     return (
         <div className="flex flex-col min-h-screen justify-between p-6 pb-32">
@@ -48,7 +54,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                 <div className="flex items-center justify-between w-full mb-6">
                     <div className="flex flex-col">
                         {/* Apple HIG: Primary label for main heading */}
-                        <h1 className="text-2xl font-bold text-label-primary tracking-wider">QuitTrack</h1>
+                        <h1 className="text-2xl font-bold text-label-primary tracking-wider">{t('app.name')}</h1>
                         {/* Apple HIG: Secondary label for supporting text */}
                         <span className="text-primary-600 dark:text-primary-400 text-xs font-medium tracking-wide">
                             {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
@@ -62,8 +68,8 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
 
                 {/* Large Circular Progress - Primary Visual Anchor */}
                 <div className="flex justify-center py-10">
-                    <div 
-                        className="relative flex items-center justify-center" 
+                    <div
+                        className="relative flex items-center justify-center"
                         style={{ width: 280, height: 280 }}
                         role="progressbar"
                         aria-valuenow={progress}
@@ -73,56 +79,62 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                     >
                         {/* Glassmorphic Circle Background - elevated style */}
                         <div className="absolute inset-0 bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]" />
-                        
-                        {/* Background Circle */}
-                        <svg
-                            width={280}
-                            height={280}
-                            viewBox="0 0 280 280"
-                            className="absolute rotate-[-90deg]"
-                        >
-                            <circle
-                                cx={140}
-                                cy={140}
-                                r={126}
-                                fill="transparent"
-                                stroke="rgba(148,163,184,0.2)"
-                                strokeWidth="12"
-                                strokeLinecap="round"
-                                className="dark:stroke-white/10"
-                            />
-                            {/* Progress Circle */}
-                            <circle
-                                cx={140}
-                                cy={140}
-                                r={126}
-                                fill="transparent"
-                                stroke={`url(#${progressGradientId})`}
-                                strokeWidth="12"
-                                strokeLinecap="round"
-                                strokeDasharray={2 * Math.PI * 126}
-                                strokeDashoffset={2 * Math.PI * 126 - (progress / 100) * 2 * Math.PI * 126}
-                                style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
-                            />
-                            <defs>
-                                <linearGradient id={progressGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor="#10b981" />
-                                    <stop offset="50%" stopColor="#6366f1" />
-                                    <stop offset="100%" stopColor="#8b5cf6" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        {/* Center Content */}
-                        <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                            {/* Apple HIG: Primary label for main count */}
-                            <span className="text-6xl font-bold text-label-primary mb-2">{todayCount}</span>
-                            {/* Apple HIG: Tertiary label for supporting text */}
-                            <span className="text-sm text-label-tertiary uppercase tracking-widest">Cigarettes</span>
-                            {/* Apple HIG: Success color, brighter in dark mode */}
-                            <span className="text-xs text-success-light dark:text-success-dark mt-2 font-medium">
-                                Last: {timeSinceLastSmoke}
-                            </span>
-                        </div>
+
+                        {isLoading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <>
+                                {/* Background Circle */}
+                                <svg
+                                    width={280}
+                                    height={280}
+                                    viewBox="0 0 280 280"
+                                    className="absolute rotate-[-90deg]"
+                                >
+                                    <circle
+                                        cx={140}
+                                        cy={140}
+                                        r={126}
+                                        fill="transparent"
+                                        stroke="rgba(148,163,184,0.2)"
+                                        strokeWidth="12"
+                                        strokeLinecap="round"
+                                        className="dark:stroke-white/10"
+                                    />
+                                    {/* Progress Circle */}
+                                    <circle
+                                        cx={140}
+                                        cy={140}
+                                        r={126}
+                                        fill="transparent"
+                                        stroke={`url(#${progressGradientId})`}
+                                        strokeWidth="12"
+                                        strokeLinecap="round"
+                                        strokeDasharray={2 * Math.PI * 126}
+                                        strokeDashoffset={2 * Math.PI * 126 - (progress / 100) * 2 * Math.PI * 126}
+                                        style={{ transition: 'stroke-dashoffset 1.5s ease-out' }}
+                                    />
+                                    <defs>
+                                        <linearGradient id={progressGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#10b981" />
+                                            <stop offset="50%" stopColor="#6366f1" />
+                                            <stop offset="100%" stopColor="#8b5cf6" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                {/* Center Content */}
+                                <div className="relative z-10 flex flex-col items-center justify-center text-center">
+                                    {/* Apple HIG: Primary label for main count */}
+                                    <span className="text-6xl font-bold text-label-primary mb-2">{todayCount}</span>
+                                    {/* Apple HIG: Tertiary label for supporting text */}
+                                    <span className="text-sm text-label-tertiary uppercase tracking-widest">{t('log.cigarettes')}</span>
+                                    {/* Apple HIG: Success color, brighter in dark mode */}
+                                    <span className="text-xs text-success-light dark:text-success-dark mt-2 font-medium">
+                                        {t('log.last')}: {timeSinceLastSmoke}
+                                    </span>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>
@@ -130,19 +142,25 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
             {/* MIDDLE: Recent Triggers Section */}
             <section className="flex-1">
                 {/* Apple HIG: Tertiary label for section headers */}
-                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-6">Triggers</h3>
+                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-6">{t('log.triggers')}</h3>
                 <div className="grid grid-cols-4 gap-3">
-                    {triggers.slice(0, 4).map(trigger => (
-                        <button
-                            key={trigger.id}
-                            onClick={() => onAddLog(trigger.name)}
-                            className="relative overflow-hidden flex flex-col items-center justify-center bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-2xl p-4 gap-2 hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15 active:scale-95 transition-all min-h-[90px] shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]"
-                        >
-                            <TriggerIcon icon={trigger.icon} className="w-7 h-7 text-label-primary" />
-                            {/* Apple HIG: Secondary label for button text */}
-                            <span className="text-xs text-label-secondary font-medium">{trigger.name}</span>
-                        </button>
-                    ))}
+                    {isLoading ? (
+                        Array.from({ length: 4 }).map((_, i) => (
+                            <SkeletonCard key={i} className="min-h-[90px]" />
+                        ))
+                    ) : (
+                        triggers.slice(0, 4).map(trigger => (
+                            <button
+                                key={trigger.id}
+                                onClick={() => onAddLog(trigger.name)}
+                                className="relative overflow-hidden flex flex-col items-center justify-center bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-2xl p-4 gap-2 hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15 active:scale-95 transition-all min-h-[90px] shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]"
+                            >
+                                <TriggerIcon icon={trigger.icon} className="w-7 h-7 text-label-primary" />
+                                {/* Apple HIG: Secondary label for button text */}
+                                <span className="text-xs text-label-secondary font-medium">{trigger.name}</span>
+                            </button>
+                        ))
+                    )}
                 </div>
             </section>
 

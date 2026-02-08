@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from 'react';
 import { TimePeriodToggle } from '../components/dashboard/TimePeriodToggle';
 import { TriggerBreakdownChart } from '../components/dashboard/TriggerBreakdownChart';
@@ -7,14 +6,19 @@ import type { SmokingLog, TimePeriod, ChartDataPoint, DailyDataPoint } from '../
 import { formatDate, getDaysAgo } from '../utils/dateHelpers';
 import { GlassCard } from '../components/common/GlassCard';
 
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { useTranslation } from 'react-i18next';
+
 interface InsightsPageProps {
     logs: SmokingLog[];
     monthlyGoal: number;
     currentMonthCount: number;
     progress: number;
+    isLoading?: boolean;
 }
 
-export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }: InsightsPageProps) {
+export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, isLoading = false }: InsightsPageProps) {
+    const { t } = useTranslation();
     const [timePeriod, setTimePeriod] = useState<TimePeriod>('7days');
 
     // Filter logs by time period
@@ -59,8 +63,16 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
     }, [filteredLogs, timePeriod, logs]);
 
     const topTrigger = useMemo(() => {
-        return triggerData.length > 0 ? triggerData[0].name : 'None';
-    }, [triggerData]);
+        return triggerData.length > 0 ? triggerData[0].name : t('settings.data.none', { defaultValue: 'None' });
+    }, [triggerData, t]);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen px-4 pt-8 pb-32 flex flex-col gap-6">
@@ -73,7 +85,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
                     </svg>
                 </div>
                 {/* Apple HIG: Primary label for heading */}
-                <h1 className="text-2xl font-bold text-label-primary">Insights</h1>
+                <h1 className="text-2xl font-bold text-label-primary">{t('insights.title')}</h1>
             </div>
 
             {/* Time Period Selector */}
@@ -86,7 +98,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
             <GlassCard className="relative overflow-hidden">
                 <div className="relative z-10">
                     {/* Apple HIG: Tertiary label for section headers */}
-                    <h3 className="text-label-tertiary text-xs font-semibold uppercase tracking-wider mb-3 pl-0.5">Monthly Goal</h3>
+                    <h3 className="text-label-tertiary text-xs font-semibold uppercase tracking-wider mb-3 pl-0.5">{t('settings.monthlyGoal.title')}</h3>
                     <div className="flex items-end gap-2 mb-4">
                         {/* Apple HIG: Primary and secondary labels */}
                         <span className="text-5xl font-bold text-label-primary">{currentMonthCount}</span>
@@ -106,11 +118,11 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
             <div className="grid grid-cols-2 gap-4">
                 <GlassCard className="flex flex-col py-5">
                     {/* Apple HIG: Tertiary label */}
-                    <span className="text-xs text-label-tertiary font-semibold uppercase tracking-wider mb-2">Daily Avg</span>
+                    <span className="text-xs text-label-tertiary font-semibold uppercase tracking-wider mb-2">{t('insights.stats.average')}</span>
                     <span className="text-3xl font-bold text-label-primary">{dailyAverage.toFixed(1)}</span>
                 </GlassCard>
                 <GlassCard className="flex flex-col py-5">
-                    <span className="text-xs text-label-tertiary font-semibold uppercase tracking-wider mb-2">Top Trigger</span>
+                    <span className="text-xs text-label-tertiary font-semibold uppercase tracking-wider mb-2">{t('insights.stats.mostCommon')}</span>
                     <span className="text-xl font-bold text-primary-600 dark:text-primary-400 truncate leading-tight">{topTrigger}</span>
                 </GlassCard>
             </div>
@@ -118,14 +130,14 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress }:
             {/* Charts */}
             <GlassCard className="py-6">
                 {/* Apple HIG: Secondary label for chart headers */}
-                <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">Activity Trend</h3>
+                <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.dailyTrend')}</h3>
                 <div className="-mx-2">
                     <DailyTrendChart data={dailyTrendData} />
                 </div>
             </GlassCard>
 
             <GlassCard className="py-6">
-                <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">Triggers</h3>
+                <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.triggerBreakdown')}</h3>
                 <div>
                     <TriggerBreakdownChart data={triggerData} />
                 </div>

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { LogPage } from './pages/LogPage';
 import { InsightsPage } from './pages/InsightsPage';
@@ -11,11 +12,8 @@ import { useToast } from './hooks/useToast';
 import { useDarkMode } from './hooks/useDarkMode';
 import { autoCleanup } from './services/dataCleanup';
 import { storage } from './services/storage';
-import type { TabType } from './types';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('log');
-
   // Run cleanup on app mount
   useEffect(() => {
     const removedCount = autoCleanup();
@@ -25,11 +23,13 @@ function App() {
   }, []);
 
   // Custom hooks
-  const { logs, addLog } = useSmokingLogs();
-  const { allTriggers } = useTriggers();
-  const { monthlyGoal, currentMonthCount, progress } = useGoal(logs);
+  const { logs, addLog, isLoading: isLogsLoading } = useSmokingLogs();
+  const { allTriggers, isLoading: isTriggersLoading } = useTriggers();
+  const { monthlyGoal, currentMonthCount, progress, isLoading: isGoalLoading } = useGoal(logs);
   const { show, message, showToast, hideToast } = useToast();
   const { isDark, themeMode, setTheme } = useDarkMode();
+
+  // const isAppLoading = isLogsLoading || isTriggersLoading || isGoalLoading;
 
   // Handle adding a log
   const handleAddLog = (trigger: string) => {
@@ -43,34 +43,47 @@ function App() {
   };
 
   return (
-    <Layout activeTab={activeTab} onTabChange={setActiveTab}>
-      {activeTab === 'log' && (
-        <LogPage
-          triggers={allTriggers}
-          onAddLog={handleAddLog}
-          logs={logs}
+    <Layout>
+      <Routes>
+        <Route
+          path="/log"
+          element={
+            <LogPage
+              triggers={allTriggers}
+              onAddLog={handleAddLog}
+              logs={logs}
+              isLoading={isLogsLoading || isTriggersLoading}
+            />
+          }
         />
-      )}
-
-      {activeTab === 'insights' && (
-        <InsightsPage
-          logs={logs}
-          monthlyGoal={monthlyGoal}
-          currentMonthCount={currentMonthCount}
-          progress={progress}
+        <Route
+          path="/insights"
+          element={
+            <InsightsPage
+              logs={logs}
+              monthlyGoal={monthlyGoal}
+              currentMonthCount={currentMonthCount}
+              progress={progress}
+              isLoading={isLogsLoading || isGoalLoading}
+            />
+          }
         />
-      )}
-
-      {activeTab === 'settings' && (
-        <SettingsPage
-          monthlyGoal={monthlyGoal}
-          logs={logs}
-          onClearData={handleClearData}
-          isDark={isDark}
-          themeMode={themeMode}
-          onSetTheme={setTheme}
+        <Route
+          path="/settings"
+          element={
+            <SettingsPage
+              monthlyGoal={monthlyGoal}
+              logs={logs}
+              onClearData={handleClearData}
+              isDark={isDark}
+              themeMode={themeMode}
+              onSetTheme={setTheme}
+              isLoading={isGoalLoading || isLogsLoading}
+            />
+          }
         />
-      )}
+        <Route path="/" element={<Navigate to="/log" replace />} />
+      </Routes>
 
       <Toast show={show} message={message} onClose={hideToast} />
     </Layout>
@@ -78,3 +91,4 @@ function App() {
 }
 
 export default App;
+

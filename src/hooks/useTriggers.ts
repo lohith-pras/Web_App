@@ -1,19 +1,22 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Trigger } from '../types';
 import { DEFAULT_TRIGGERS } from '../constants/triggers';
-import { storage } from '../services/storage';
+// import { storage } from '../services/storage'; // Removed
+import {
+    useTriggersQuery,
+    useAddTriggerMutation,
+    useUpdateTriggerMutation,
+    useDeleteTriggerMutation
+} from './useTriggersQuery';
 
 export function useTriggers() {
-    const [customTriggers, setCustomTriggers] = useState<Trigger[]>(() => storage.getCustomTriggers());
+    const triggersQuery = useTriggersQuery();
+    const addMutation = useAddTriggerMutation();
+    const updateMutation = useUpdateTriggerMutation();
+    const deleteMutation = useDeleteTriggerMutation();
 
-    // Save custom triggers to localStorage whenever they change
-    useEffect(() => {
-        if (customTriggers.length > 0 || storage.getCustomTriggers().length > 0) {
-            storage.saveCustomTriggers(customTriggers);
-        }
-    }, [customTriggers]);
-
+    const customTriggers = triggersQuery.data ?? [];
     const allTriggers = [...DEFAULT_TRIGGERS, ...customTriggers];
 
     const addCustomTrigger = useCallback((name: string, icon: string = 'default') => {
@@ -23,20 +26,19 @@ export function useTriggers() {
             icon,
             isCustom: true,
         };
-        setCustomTriggers(prev => [...prev, newTrigger]);
-    }, []);
+        addMutation.mutate(newTrigger);
+    }, [addMutation]);
 
     const deleteCustomTrigger = useCallback((id: string) => {
-        setCustomTriggers(prev => prev.filter(trigger => trigger.id !== id));
-    }, []);
+        deleteMutation.mutate(id);
+    }, [deleteMutation]);
 
     const updateCustomTrigger = useCallback((id: string, name: string, icon: string) => {
-        setCustomTriggers(prev =>
-            prev.map(trigger =>
-                trigger.id === id ? { ...trigger, name, icon } : trigger
-            )
-        );
-    }, []);
+        const trigger = customTriggers.find(t => t.id === id);
+        if (trigger) {
+            updateMutation.mutate({ ...trigger, name, icon });
+        }
+    }, [customTriggers, updateMutation]);
 
     return {
         allTriggers,
@@ -44,5 +46,8 @@ export function useTriggers() {
         addCustomTrigger,
         deleteCustomTrigger,
         updateCustomTrigger,
+        isLoading: triggersQuery.isLoading,
+        isError: triggersQuery.isError,
+        error: triggersQuery.error,
     };
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Trigger } from '../../types';
 import { TriggerIcon } from '../common/TriggerIcon';
 
@@ -14,6 +15,8 @@ export function TriggerSelectionModal({
     onSelectTrigger,
     triggers,
 }: TriggerSelectionModalProps) {
+    const { t } = useTranslation();
+
     if (!isOpen) return null;
 
     return (
@@ -22,7 +25,7 @@ export function TriggerSelectionModal({
             <div className="relative overflow-hidden bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-t-white/30 dark:border-t-white/10 border-l border-l-white/30 dark:border-l-white/10 border-b border-b-white/10 dark:border-b-white/5 border-r border-r-white/10 dark:border-r-white/5 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] animate-slide-up">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-label-primary">What triggered it?</h2>
+                    <h2 className="text-xl font-semibold text-label-primary">{t('log.modal.title')}</h2>
                     <button
                         onClick={onClose}
                         className="text-label-secondary hover:text-label-primary transition-colors p-2 hover:bg-white/10 rounded-full"
@@ -58,7 +61,7 @@ export function TriggerSelectionModal({
                     }}
                     className="w-full mt-4 py-3 text-label-secondary hover:text-label-primary transition-colors hover:bg-white/[0.08] rounded-xl backdrop-blur-sm"
                 >
-                    Skip
+                    {t('log.modal.skip')}
                 </button>
             </div>
         </div>

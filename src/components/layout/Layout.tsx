@@ -1,15 +1,12 @@
 
 import type { ReactNode } from 'react';
 import { BottomNav } from './BottomNav';
-import type { TabType } from '../../types';
 
 interface LayoutProps {
     children: ReactNode;
-    activeTab: TabType;
-    onTabChange: (tab: TabType) => void;
 }
 
-export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
+export function Layout({ children }: LayoutProps) {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black text-gray-900 dark:text-white font-sans relative overflow-hidden transition-colors duration-300">
             {/* Light Mode Background Blobs */}
@@ -26,7 +23,8 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
                 {children}
             </main>
 
-            <BottomNav activeTab={activeTab} onTabChange={onTabChange} />
+            <BottomNav />
         </div>
     );
 }
+
