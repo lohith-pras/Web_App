@@ -1,25 +1,14 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import type { GoalStatus, SmokingLog } from '../types';
+import { useState, useMemo } from 'react';
+import type { SmokingLog } from '../types';
 import { storage } from '../services/storage';
 import { DEFAULT_MONTHLY_GOAL } from '../constants/triggers';
 import { getMonthStart } from '../utils/dateHelpers';
 
 export function useGoal(logs: SmokingLog[]) {
-    const [monthlyGoal, setMonthlyGoal] = useState<number>(DEFAULT_MONTHLY_GOAL);
-
-    // Load goal from localStorage on mount
-    useEffect(() => {
+    const [monthlyGoal] = useState<number>(() => {
         const saved = storage.getMonthlyGoal();
-        if (saved > 0) {
-            setMonthlyGoal(saved);
-        }
-    }, []);
-
-    // Save goal to localStorage whenever it changes
-    const updateGoal = useCallback((newGoal: number) => {
-        setMonthlyGoal(newGoal);
-        storage.saveMonthlyGoal(newGoal);
-    }, []);
+        return saved > 0 ? saved : DEFAULT_MONTHLY_GOAL;
+    });
 
     // Calculate current month's count
     const currentMonthCount = useMemo(() => {
@@ -36,18 +25,9 @@ export function useGoal(logs: SmokingLog[]) {
         return Math.min(Math.round((currentMonthCount / monthlyGoal) * 100), 100);
     }, [currentMonthCount, monthlyGoal]);
 
-    // Determine status color
-    const status: GoalStatus = useMemo(() => {
-        if (progress < 70) return 'green';
-        if (progress < 90) return 'yellow';
-        return 'red';
-    }, [progress]);
-
     return {
         monthlyGoal,
-        setMonthlyGoal: updateGoal,
         currentMonthCount,
         progress,
-        status,
     };
 }

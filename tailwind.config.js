@@ -7,7 +7,26 @@ export default {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'],
+            },
             colors: {
+                // Apple HIG: Semantic label colors that adapt to light/dark mode
+                label: {
+                    primary: 'rgb(var(--color-label-primary) / <alpha-value>)',
+                    secondary: 'rgb(var(--color-label-secondary) / <alpha-value>)',
+                    tertiary: 'rgb(var(--color-label-tertiary) / <alpha-value>)',
+                    quaternary: 'rgb(var(--color-label-quaternary) / <alpha-value>)',
+                },
+                // Apple HIG: Background colors (base and elevated for depth)
+                background: {
+                    base: 'rgb(var(--color-bg-base) / <alpha-value>)',
+                    elevated: 'rgb(var(--color-bg-elevated) / <alpha-value>)',
+                    'elevated-secondary': 'rgb(var(--color-bg-elevated-secondary) / <alpha-value>)',
+                },
+                // Apple HIG: Separator colors
+                separator: 'rgb(var(--color-separator) / <alpha-value>)',
+                // Brand primary colors meet 7:1; status colors may follow different WCAG targets (e.g., 4.5:1) — verify as needed
                 primary: {
                     50: '#f0f9ff',
                     100: '#e0f2fe',
@@ -21,16 +40,16 @@ export default {
                     900: '#0c4a6e',
                 },
                 success: {
-                    500: '#10b981',
-                    600: '#059669',
-                },
-                neutral: {
-                    500: '#6b7280',
-                    600: '#4b5563',
+                    light: '#10b981',
+                    dark: '#34d399', // Brighter for dark mode
                 },
                 warning: {
-                    500: '#f59e0b',
-                    600: '#d97706',
+                    light: '#f59e0b',
+                    dark: '#fbbf24', // Brighter for dark mode
+                },
+                danger: {
+                    light: '#ef4444',
+                    dark: '#f87171', // Brighter for dark mode
                 },
             },
             minHeight: {
@@ -38,6 +57,14 @@ export default {
             },
             minWidth: {
                 'touch': '44px',
+            },
+            backgroundColor: {
+                'glass-light': 'rgba(255, 255, 255, 0.7)',
+                'glass-dark': 'rgba(255, 255, 255, 0.08)',
+            },
+            borderColor: {
+                'glass-light': 'rgba(255, 255, 255, 0.3)',
+                'glass-dark': 'rgba(255, 255, 255, 0.1)',
             },
         },
     },

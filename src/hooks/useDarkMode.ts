@@ -1,78 +1,9 @@
-import { useState, useEffect } from 'react';
-import { storage } from '../services/storage';
-import type { ThemeMode } from '../types';
+import { useTheme } from './useTheme';
 
-function getSystemPreference(): boolean {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-function resolveTheme(mode: ThemeMode): boolean {
-    if (mode === 'system') {
-        return getSystemPreference();
-    }
-    return mode === 'dark';
-}
-
+/**
+ * Hook for accessing dark mode state and theme controls
+ * @deprecated Use useTheme() directly for consistent state across components
+ */
 export function useDarkMode() {
-    const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
-        // Initialize from storage, default to 'system'
-        return storage.getThemeMode();
-    });
-
-    const [isDark, setIsDark] = useState<boolean>(() => {
-        // Resolve initial theme
-        return resolveTheme(storage.getThemeMode());
-    });
-
-    // Listen for system preference changes
-    useEffect(() => {
-        if (themeMode !== 'system') return;
-
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e: MediaQueryListEvent) => {
-            setIsDark(e.matches);
-            // Apply dark mode class immediately on system change
-            if (e.matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        };
-
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, [themeMode]);
-
-    // Apply theme and save to storage
-    useEffect(() => {
-        const resolved = resolveTheme(themeMode);
-        setIsDark(resolved);
-
-        // Apply dark mode class to document root
-        if (resolved) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-
-        // Save to storage
-        storage.saveThemeMode(themeMode);
-    }, [themeMode]);
-
-    const setTheme = (mode: ThemeMode) => {
-        setThemeMode(mode);
-    };
-
-    const toggleDarkMode = () => {
-        // Toggle to opposite appearance. From system mode, switches to explicit
-        // opposite of current system preference. Then: light -> dark -> system.
-        if (themeMode === 'system') {
-            setThemeMode(isDark ? 'light' : 'dark');
-        } else if (themeMode === 'light') {
-            setThemeMode('dark');
-        } else {
-            setThemeMode('system');
-        }
-    };
-    return { isDark, themeMode, setTheme, toggleDarkMode };
+    return useTheme();
 }

@@ -11,7 +11,7 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
     
     if (data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-48 text-gray-400">
+            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
                 <p>No data yet. Start logging to see trends.</p>
             </div>
         );
@@ -33,10 +33,14 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
     return (
         <div>
             {data.length >= 14 && (
-                <div className={`px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block ${
-                    change < 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                <div className={`px-3 py-1.5 rounded-full text-sm font-semibold mb-4 inline-block ${
+                    change > 0 
+                        ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/30'
+                        : change < 0
+                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
+                        : 'bg-slate-500/20 text-slate-600 dark:text-slate-300 border border-slate-500/30'
                 }`}>
-                    {change < 0 ? '↓' : '↑'} {Math.abs(change)}% vs last week
+                    {change > 0 ? '↑' : change < 0 ? '↓' : '—'} {change === 0 ? '0' : Math.abs(change)}% vs last week
                 </div>
             )}
 
@@ -44,9 +48,9 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
                 <AreaChart data={data}>
                     <defs>
                         <linearGradient id="auroraGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4} />
-                            <stop offset="50%" stopColor="#6366f1" stopOpacity={0.2} />
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                            <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.6} />
+                            <stop offset="50%" stopColor="#6366f1" stopOpacity={0.4} />
+                            <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.1} />
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} strokeOpacity={0.1} />
@@ -74,7 +78,7 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
                     <Area
                         type="monotone"
                         dataKey="count"
-                        stroke="url(#auroraGradient)"
+                        stroke="#6366f1"
                         strokeWidth={3}
                         fill="url(#auroraGradient)"
                     />

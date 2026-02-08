@@ -21,10 +21,10 @@ export function TimePeriodToggle({ selected, onChange }: TimePeriodToggleProps) 
                     type="button"
                     onClick={() => onChange(period.value)}
                     aria-pressed={selected === period.value}
-                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium transition-all duration-300 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 ${
+                    className={`flex-1 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 ${
                         selected === period.value
                             ? 'text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg'
-                            : 'text-gray-300 hover:text-white hover:bg-white/5'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/10 dark:hover:bg-white/5'
                     }`}
                 >
                     {period.label}

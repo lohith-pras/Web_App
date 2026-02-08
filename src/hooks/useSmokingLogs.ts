@@ -1,17 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import type { SmokingLog, TimePeriod } from '../types';
+import type { SmokingLog } from '../types';
 import { storage } from '../services/storage';
-import { formatDate, getDaysAgo } from '../utils/dateHelpers';
+import { formatDate } from '../utils/dateHelpers';
 
 export function useSmokingLogs() {
-    const [logs, setLogs] = useState<SmokingLog[]>([]);
-
-    // Load logs from localStorage on mount
-    useEffect(() => {
-        const savedLogs = storage.getLogs();
-        setLogs(savedLogs);
-    }, []);
+    const [logs, setLogs] = useState<SmokingLog[]>(() => storage.getLogs());
 
     // Save logs to localStorage whenever they change
     useEffect(() => {
@@ -31,39 +25,8 @@ export function useSmokingLogs() {
         setLogs(prev => [...prev, newLog]);
     }, []);
 
-    const deleteLog = useCallback((id: string) => {
-        setLogs(prev => prev.filter(log => log.id !== id));
-    }, []);
-
-    const getLogsForPeriod = useCallback((period: TimePeriod): SmokingLog[] => {
-        if (period === 'all') {
-            return logs;
-        }
-
-        const days = period === '7days' ? 7 : 30;
-        const startDate = getDaysAgo(days);
-
-        return logs.filter(log => {
-            const logDate = new Date(log.date);
-            return logDate >= startDate;
-        });
-    }, [logs]);
-
-    const getTodayLogs = useCallback((): SmokingLog[] => {
-        const today = formatDate(new Date());
-        return logs.filter(log => log.date === today);
-    }, [logs]);
-
-    const getLogsForDate = useCallback((date: string): SmokingLog[] => {
-        return logs.filter(log => log.date === date);
-    }, [logs]);
-
     return {
         logs,
         addLog,
-        deleteLog,
-        getLogsForPeriod,
-        getTodayLogs,
-        getLogsForDate,
     };
 }

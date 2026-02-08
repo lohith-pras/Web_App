@@ -5,13 +5,7 @@ import { DEFAULT_TRIGGERS } from '../constants/triggers';
 import { storage } from '../services/storage';
 
 export function useTriggers() {
-    const [customTriggers, setCustomTriggers] = useState<Trigger[]>([]);
-
-    // Load custom triggers from localStorage on mount
-    useEffect(() => {
-        const saved = storage.getCustomTriggers();
-        setCustomTriggers(saved);
-    }, []);
+    const [customTriggers, setCustomTriggers] = useState<Trigger[]>(() => storage.getCustomTriggers());
 
     // Save custom triggers to localStorage whenever they change
     useEffect(() => {
@@ -22,7 +16,7 @@ export function useTriggers() {
 
     const allTriggers = [...DEFAULT_TRIGGERS, ...customTriggers];
 
-    const addCustomTrigger = useCallback((name: string, icon: string = '🚬') => {
+    const addCustomTrigger = useCallback((name: string, icon: string = 'default') => {
         const newTrigger: Trigger = {
             id: uuidv4(),
             name,

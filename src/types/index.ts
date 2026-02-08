@@ -21,7 +21,6 @@ export interface ToastProps {
 
 // Utility types
 export type TimePeriod = '7days' | '30days' | 'all';
-export type GoalStatus = 'green' | 'yellow' | 'red';
 export type TabType = 'log' | 'insights' | 'settings';
 export type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -36,30 +35,3 @@ export interface DailyDataPoint {
     count: number;
 }
 
-// Settings interfaces
-export interface NotificationSettings {
-    dailyCheckIn: boolean;
-    limitAlerts: boolean;
-    checkInTime: string;
-}
-
-// Storage data structure
-export interface StorageData {
-    logs: SmokingLog[];
-    customTriggers: Trigger[];
-    monthlyGoal: number;
-    notifications: NotificationSettings;
-}
-
-// Validation types
-export interface ValidationResult {
-    isValid: boolean;
-    error?: string;
-}
-
-export interface CleanupStats {
-    totalLogs: number;
-    logsToRemove: number;
-    oldestLogDate: string | null;
-    cutoffDate: string;
-}
