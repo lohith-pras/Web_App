@@ -15,7 +15,11 @@ function cleanupOldLogs(): number {
     const removedCount = initialCount - recentLogs.length;
 
     // Update last cleanup timestamp
-    localStorage.setItem(CLEANUP_CHECK_KEY, new Date().toISOString());
+    try {
+        localStorage.setItem(CLEANUP_CHECK_KEY, new Date().toISOString());
+    } catch (error) {
+        console.error('Failed to save cleanup timestamp:', error);
+    }
 
     return removedCount;
 }
@@ -24,17 +28,22 @@ function cleanupOldLogs(): number {
  * Check if cleanup should run (once per day)
  */
 function shouldRunCleanup(): boolean {
-    const lastCheck = localStorage.getItem(CLEANUP_CHECK_KEY);
+    try {
+        const lastCheck = localStorage.getItem(CLEANUP_CHECK_KEY);
 
-    if (!lastCheck) return true;
+        if (!lastCheck) return true;
 
-    const lastCheckDate = new Date(lastCheck);
-    const now = new Date();
+        const lastCheckDate = new Date(lastCheck);
+        const now = new Date();
 
-    // Run cleanup if last check was more than 24 hours ago
-    const hoursSinceLastCheck = (now.getTime() - lastCheckDate.getTime()) / (1000 * 60 * 60);
+        // Run cleanup if last check was more than 24 hours ago
+        const hoursSinceLastCheck = (now.getTime() - lastCheckDate.getTime()) / (1000 * 60 * 60);
 
-    return hoursSinceLastCheck >= 24;
+        return hoursSinceLastCheck >= 24;
+    } catch (error) {
+        console.error('Failed to check cleanup status:', error);
+        return true; // Run cleanup if we can't check
+    }
 }
 
 /**

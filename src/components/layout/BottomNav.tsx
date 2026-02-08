@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
+import type { ReactNode } from 'react';
 import type { TabType } from '../../types';
 import { useDarkMode } from '../../hooks/useDarkMode';
 
@@ -11,7 +12,7 @@ interface BottomNavProps {
 interface NavItem {
     id: TabType;
     label: string;
-    icon: React.ReactNode;
+    icon: ReactNode;
 }
 
 const navItems: NavItem[] = [
