@@ -1,39 +1,10 @@
-import type { CleanupStats } from '../types';
-import { isOlderThan, formatDate } from '../utils/dateHelpers';
+import { isOlderThan } from '../utils/dateHelpers';
 import { storage } from './storage';
 
 const RETENTION_MONTHS = 6;
 const CLEANUP_CHECK_KEY = 'last_cleanup_check';
 
-/**
- * Get statistics about logs that would be removed by cleanup
- */
-export function getCleanupStats(): CleanupStats {
-    const logs = storage.getLogs();
-    const cutoffDate = new Date();
-    cutoffDate.setMonth(cutoffDate.getMonth() - RETENTION_MONTHS);
-
-    const logsToRemove = logs.filter(log => isOlderThan(log.date, RETENTION_MONTHS));
-
-    const oldestLog = logs.length > 0
-        ? logs.reduce((oldest, log) =>
-            new Date(log.date) < new Date(oldest.date) ? log : oldest
-        )
-        : null;
-
-    return {
-        totalLogs: logs.length,
-        logsToRemove: logsToRemove.length,
-        oldestLogDate: oldestLog ? oldestLog.date : null,
-        cutoffDate: formatDate(cutoffDate),
-    };
-}
-
-/**
- * Remove logs older than 6 months
- * Returns the number of logs removed
- */
-export function cleanupOldLogs(): number {
+function cleanupOldLogs(): number {
     const logs = storage.getLogs();
     const initialCount = logs.length;
 
@@ -52,7 +23,7 @@ export function cleanupOldLogs(): number {
 /**
  * Check if cleanup should run (once per day)
  */
-export function shouldRunCleanup(): boolean {
+function shouldRunCleanup(): boolean {
     const lastCheck = localStorage.getItem(CLEANUP_CHECK_KEY);
 
     if (!lastCheck) return true;

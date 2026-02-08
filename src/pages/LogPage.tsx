@@ -1,6 +1,7 @@
 
 import { useState, useMemo, useId } from 'react';
 import { TriggerSelectionModal } from '../components/logging/TriggerSelectionModal';
+import { TriggerIcon } from '../components/common/TriggerIcon';
 import type { Trigger, SmokingLog } from '../types';
 import { formatDate } from '../utils/dateHelpers';
 
@@ -46,12 +47,15 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
             <header className="flex-none">
                 <div className="flex items-center justify-between w-full mb-6">
                     <div className="flex flex-col">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-wider">QuitTrack</h1>
-                        <span className="text-indigo-600 dark:text-indigo-300 text-xs font-medium tracking-wide">
+                        {/* Apple HIG: Primary label for main heading */}
+                        <h1 className="text-2xl font-bold text-label-primary tracking-wider">QuitTrack</h1>
+                        {/* Apple HIG: Secondary label for supporting text */}
+                        <span className="text-primary-600 dark:text-primary-400 text-xs font-medium tracking-wide">
                             {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                         </span>
                     </div>
-                    <div className="relative overflow-hidden bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 w-10 h-10 flex items-center justify-center rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+                    {/* Avatar with elevated glass effect */}
+                    <div className="relative overflow-hidden bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 w-10 h-10 flex items-center justify-center rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-emerald-500 to-indigo-500" />
                     </div>
                 </div>
@@ -67,8 +71,8 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                         aria-valuemax={100}
                         aria-label={`${todayCount} cigarettes smoked today. Last smoked: ${timeSinceLastSmoke}`}
                     >
-                        {/* Glassmorphic Circle Background */}
-                        <div className="absolute inset-0 bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]" />
+                        {/* Glassmorphic Circle Background - elevated style */}
+                        <div className="absolute inset-0 bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]" />
                         
                         {/* Background Circle */}
                         <svg
@@ -110,9 +114,12 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                         </svg>
                         {/* Center Content */}
                         <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                            <span className="text-6xl font-bold text-gray-900 dark:text-white mb-2">{todayCount}</span>
-                            <span className="text-sm text-gray-600 dark:text-gray-300 uppercase tracking-widest">Cigarettes</span>
-                            <span className="text-xs text-emerald-600 dark:text-emerald-300 mt-2 font-medium">
+                            {/* Apple HIG: Primary label for main count */}
+                            <span className="text-6xl font-bold text-label-primary mb-2">{todayCount}</span>
+                            {/* Apple HIG: Tertiary label for supporting text */}
+                            <span className="text-sm text-label-tertiary uppercase tracking-widest">Cigarettes</span>
+                            {/* Apple HIG: Success color, brighter in dark mode */}
+                            <span className="text-xs text-success-light dark:text-success-dark mt-2 font-medium">
                                 Last: {timeSinceLastSmoke}
                             </span>
                         </div>
@@ -122,16 +129,18 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
 
             {/* MIDDLE: Recent Triggers Section */}
             <section className="flex-1">
-                <h3 className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-300/60 mb-4">Triggers</h3>
+                {/* Apple HIG: Tertiary label for section headers */}
+                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-6">Triggers</h3>
                 <div className="grid grid-cols-4 gap-3">
                     {triggers.slice(0, 4).map(trigger => (
                         <button
                             key={trigger.id}
                             onClick={() => onAddLog(trigger.name)}
-                            className="relative overflow-hidden flex flex-col items-center justify-center bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-2xl p-4 gap-2 hover:bg-white/70 dark:hover:bg-white/[0.12] hover:border-white/30 active:scale-95 transition-all min-h-[90px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]"
+                            className="relative overflow-hidden flex flex-col items-center justify-center bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-2xl p-4 gap-2 hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15 active:scale-95 transition-all min-h-[90px] shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]"
                         >
-                            <span className="text-2xl">{trigger.icon}</span>
-                            <span className="text-xs text-gray-700 dark:text-gray-200 font-medium">{trigger.name}</span>
+                            <TriggerIcon icon={trigger.icon} className="w-7 h-7 text-label-primary" />
+                            {/* Apple HIG: Secondary label for button text */}
+                            <span className="text-xs text-label-secondary font-medium">{trigger.name}</span>
                         </button>
                     ))}
                 </div>
@@ -142,7 +151,7 @@ export function LogPage({ triggers, onAddLog, logs }: LogPageProps) {
                 <div className="max-w-md mx-auto">
                     <button
                         onClick={() => setShowModal(true)}
-                        className="relative overflow-hidden w-full py-3.5 rounded-2xl bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] font-semibold text-gray-900 dark:text-white text-base md:text-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all hover:bg-white/70 dark:hover:bg-white/[0.12] hover:border-white/30"
+                        className="relative overflow-hidden w-full py-3.5 rounded-2xl bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] font-semibold text-label-primary text-base md:text-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15"
                     >
                         <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

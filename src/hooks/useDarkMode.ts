@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import { storage } from '../services/storage';
 import type { ThemeMode } from '../types';
 
@@ -19,37 +19,25 @@ export function useDarkMode() {
         return storage.getThemeMode();
     });
 
-    const [isDark, setIsDark] = useState<boolean>(() => {
-        // Resolve initial theme
-        return resolveTheme(storage.getThemeMode());
-    });
-
-    // Listen for system preference changes
-    useEffect(() => {
-        if (themeMode !== 'system') return;
-
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e: MediaQueryListEvent) => {
-            setIsDark(e.matches);
-            // Apply dark mode class immediately on system change
-            if (e.matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+    const systemPrefersDark = useSyncExternalStore(
+        (callback) => {
+            if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+                return () => {};
             }
-        };
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', callback);
+            return () => mediaQuery.removeEventListener('change', callback);
+        },
+        () => getSystemPreference(),
+        () => false
+    );
 
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, [themeMode]);
+    const isDark = resolveTheme(themeMode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : themeMode);
 
     // Apply theme and save to storage
     useEffect(() => {
-        const resolved = resolveTheme(themeMode);
-        setIsDark(resolved);
-
         // Apply dark mode class to document root
-        if (resolved) {
+        if (isDark) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -57,7 +45,7 @@ export function useDarkMode() {
 
         // Save to storage
         storage.saveThemeMode(themeMode);
-    }, [themeMode]);
+    }, [themeMode, isDark]);
 
     const setTheme = (mode: ThemeMode) => {
         setThemeMode(mode);

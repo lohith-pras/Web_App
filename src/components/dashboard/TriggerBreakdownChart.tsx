@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import type { LegendPayload } from 'recharts';
+import { useDarkMode } from '../../hooks/useDarkMode';
 import type { ChartDataPoint } from '../../types';
 
 interface TriggerBreakdownChartProps {
@@ -9,28 +10,36 @@ interface TriggerBreakdownChartProps {
 const COLORS = ['#8b5cf6', '#6366f1', '#3b82f6', '#ec4899', '#f59e0b', '#10b981'];
 
 export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
+    const { isDark } = useDarkMode();
+
     if (data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-48 text-gray-400">
+            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
                 <p>No data yet. Start logging to see your triggers.</p>
             </div>
         );
     }
 
+    // Theme-dependent colors
+    const tooltipBg = isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+    const tooltipBorder = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const tooltipColor = isDark ? '#f1f5f9' : '#0f172a';
+    const legendTextColor = isDark ? '#d1d5db' : '#374151';
+
     return (
         <div>
-            <ResponsiveContainer width="100%" height={250}>
+            <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                     <Pie
                         data={data}
                         cx="50%"
-                        cy="50%"
+                        cy="45%"
                         labelLine={false}
-                        outerRadius={80}
+                        outerRadius={90}
                         fill="#8884d8"
                         dataKey="value"
                         strokeWidth={2}
-                        stroke="rgba(255,255,255,0.1)"
+                        stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}
                     >
                         {data.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -38,43 +47,42 @@ export function TriggerBreakdownChart({ data }: TriggerBreakdownChartProps) {
                     </Pie>
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            backgroundColor: tooltipBg,
+                            border: `1px solid ${tooltipBorder}`,
                             borderRadius: '12px',
                             backdropFilter: 'blur(12px)',
-                            color: '#f1f5f9',
+                            color: tooltipColor,
                             padding: '8px 12px',
                         }}
                     />
                     <Legend
-                        wrapperStyle={{ fontSize: '12px' }}
+                        wrapperStyle={{ fontSize: '13px', color: legendTextColor }}
                         formatter={(value, entry: LegendPayload) => (
-                            // entry.payload.value is optional in LegendPayload type, so we use nullish coalescing for safety
-                            <span className="text-gray-700 dark:text-gray-300">{`${value} (${entry.payload?.value ?? 0})`}</span>
+                            <span style={{ color: legendTextColor }}>{`${value} (${entry.payload?.value ?? 0})`}</span>
                         )}
                     />
                 </PieChart>
             </ResponsiveContainer>
 
             {/* Top triggers list */}
-            <div className="mt-4 space-y-2">
+            <div className="mt-6 space-y-3">
                 {data.slice(0, 3).map((item, index) => {
                     const total = data.reduce((sum, d) => sum + d.value, 0);
                     const percentage = Math.round((item.value / total) * 100);
 
                     return (
-                        <div key={index} className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
+                        <div key={index} className="flex items-center justify-between py-2">
+                            <div className="flex items-center gap-3">
                                 <div
-                                    className="w-3 h-3 rounded-full shadow-lg"
+                                    className="w-4 h-4 rounded-full shadow-lg"
                                     style={{ 
                                         backgroundColor: COLORS[index % COLORS.length],
-                                        boxShadow: `0 0 8px ${COLORS[index % COLORS.length]}40`
+                                        boxShadow: `0 0 10px ${COLORS[index % COLORS.length]}60`
                                     }}
                                 />
-                                <span className="text-gray-700 dark:text-gray-300 text-sm">{item.name}</span>
+                                <span className="text-gray-700 dark:text-gray-200 text-sm font-medium">{item.name}</span>
                             </div>
-                            <span className="text-gray-900 dark:text-white font-medium">{percentage}%</span>
+                            <span className="text-gray-900 dark:text-white font-semibold text-base">{percentage}%</span>
                         </div>
                     );
                 })}
