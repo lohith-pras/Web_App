@@ -1,16 +1,12 @@
 
 import type { ReactNode } from 'react';
 import { BottomNav } from './BottomNav';
-import { SideNav } from './SideNav';
-import { useSidebarCollapse } from '../../hooks/useSidebarCollapse';
 
 interface LayoutProps {
     children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
-    const { isCollapsed } = useSidebarCollapse();
-    
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black text-gray-900 dark:text-white font-sans relative overflow-hidden transition-colors duration-300">
             {/* Light Mode Background Blobs */}
@@ -23,12 +19,9 @@ export function Layout({ children }: LayoutProps) {
             {/* Subtle radial gradient overlay */}
             <div className="fixed inset-0 [background-image:radial-gradient(circle,transparent,transparent,rgb(241_245_249/0.5)_100%)] dark:[background-image:radial-gradient(circle,transparent,transparent,rgb(0_0_0/0.5)_100%)] -z-10 transition-colors duration-300" />
 
-            {/* Desktop Side Navigation */}
-            <SideNav />
-
-            {/* Main Content: Mobile full width with safe areas, Desktop offset by sidebar */}
+            {/* Main Content: Full width with safe areas and bottom nav spacing */}
             <main 
-                className={`relative z-10 pb-24 md:pb-8 min-h-screen flex flex-col ${isCollapsed ? 'md:ml-20' : 'md:ml-80'}`}
+                className="relative z-10 pb-24 min-h-screen flex flex-col"
                 style={{
                     paddingLeft: 'max(env(safe-area-inset-left), 0px)',
                     paddingRight: 'max(env(safe-area-inset-right), 0px)'
@@ -40,7 +33,7 @@ export function Layout({ children }: LayoutProps) {
                 </div>
             </main>
 
-            {/* Mobile Bottom Navigation */}
+            {/* Bottom Navigation */}
             <BottomNav />
         </div>
     );

@@ -48,9 +48,9 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
     }, [logs, t]);
 
     return (
-        <div className="flex flex-col justify-start gap-y-8 w-full">
+        <div className="flex flex-col gap-y-6 w-full">
             {/* TOP: Header & Large Progress Circle */}
-            <header className="flex-none px-2 md:px-0">
+            <header>
                 <div className="flex items-center justify-between w-full mb-6">
                     <div className="flex flex-col min-w-0">
                         {/* Apple HIG: Primary label for main heading */}
@@ -67,10 +67,9 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
                 </div>
 
                 {/* Large Circular Progress - Primary Visual Anchor */}
-                <div className="flex justify-center py-10 pb-20 md:pb-12">
+                <div className="flex justify-center py-8">
                     <div
                         className="relative flex items-center justify-center w-[280px] h-[280px] md:w-[320px] md:h-[320px]"
-                        style={{ width: 'inherit', height: 'inherit' }}
                         role="progressbar"
                         aria-valuenow={progress}
                         aria-valuemin={0}
@@ -78,19 +77,20 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
                         aria-label={`${todayCount} cigarettes smoked today. Last smoked: ${timeSinceLastSmoke}`}
                     >
                         {/* Glassmorphic Circle Background - elevated style */}
-                        <div className="absolute inset-0 bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]" />
+                        <div className="absolute inset-0 z-0 bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]" />
 
                         {isLoading ? (
-                            <LoadingSpinner />
+                            <div className="relative z-20">
+                                <LoadingSpinner />
+                            </div>
                         ) : (
                             <>
-                                {/* Background Circle */}
+                                {/* Progress SVG */}
                                 <svg
-                                    width={280}
-                                    height={280}
                                     viewBox="0 0 280 280"
-                                    className="absolute rotate-[-90deg]"
+                                    className="absolute inset-0 w-full h-full z-10 rotate-[-90deg]"
                                 >
+                                    {/* Background Circle */}
                                     <circle
                                         cx={140}
                                         cy={140}
@@ -123,7 +123,7 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
                                     </defs>
                                 </svg>
                                 {/* Center Content */}
-                                <div className="relative z-10 flex flex-col items-center justify-center text-center">
+                                <div className="relative z-20 flex flex-col items-center justify-center text-center">
                                     {/* Apple HIG: Primary label for main count */}
                                     <span className="text-6xl font-bold text-label-primary mb-2">{todayCount}</span>
                                     {/* Apple HIG: Tertiary label for supporting text */}
@@ -140,9 +140,9 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
             </header>
 
             {/* MIDDLE: Recent Triggers Section */}
-            <section className="flex-1 px-2 md:px-0">
+            <section>
                 {/* Apple HIG: Tertiary label for section headers */}
-                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-8">{t('log.triggers')}</h3>
+                <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-4">{t('log.triggers')}</h3>
                 <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
                     {isLoading ? (
                         Array.from({ length: 4 }).map((_, i) => (
@@ -165,7 +165,7 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
             </section>
 
             {/* BOTTOM: Floating Action Button */}
-            <div className="mt-8 px-2 md:px-0">
+            <div className="pb-4">
                 <button
                     onClick={() => setShowModal(true)}
                     className="relative overflow-hidden w-full py-3.5 rounded-2xl bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] font-semibold text-label-primary text-base md:text-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15"

@@ -77,7 +77,7 @@ export function BottomNav() {
 
     return (
         <nav 
-            className="md:hidden fixed bottom-6 left-0 right-0 z-50 px-6 safe-area-inset-bottom"
+            className="fixed bottom-6 left-0 right-0 z-50 px-6 safe-area-inset-bottom"
             style={{
                 paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                 paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
