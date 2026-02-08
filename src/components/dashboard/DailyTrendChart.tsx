@@ -1,4 +1,5 @@
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area } from 'recharts';
+import { useDarkMode } from '../../hooks/useDarkMode';
 import type { DailyDataPoint } from '../../types';
 
 interface DailyTrendChartProps {
@@ -6,6 +7,8 @@ interface DailyTrendChartProps {
 }
 
 export function DailyTrendChart({ data }: DailyTrendChartProps) {
+    const { isDark } = useDarkMode();
+    
     if (data.length === 0) {
         return (
             <div className="flex items-center justify-center h-48 text-gray-400">
@@ -18,6 +21,14 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
     const recentAvg = data.slice(-7).reduce((sum, d) => sum + d.count, 0) / 7;
     const previousAvg = data.slice(-14, -7).reduce((sum, d) => sum + d.count, 0) / 7;
     const change = previousAvg > 0 ? Math.round(((recentAvg - previousAvg) / previousAvg) * 100) : 0;
+
+    // Theme-dependent colors
+    const gridStroke = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.1)';
+    const axisStroke = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)';
+    const tickFill = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.6)';
+    const tooltipBg = isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.95)';
+    const tooltipBorder = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const tooltipColor = isDark ? '#f1f5f9' : '#0f172a';
 
     return (
         <div>
@@ -38,24 +49,24 @@ export function DailyTrendChart({ data }: DailyTrendChartProps) {
                             <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" strokeOpacity={0.1} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} strokeOpacity={0.1} />
                     <XAxis
                         dataKey="date"
-                        stroke="rgba(255,255,255,0.3)"
-                        tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }}
+                        stroke={axisStroke}
+                        tick={{ fill: tickFill, fontSize: 12 }}
                         tickFormatter={(value) => {
                             const date = new Date(value);
                             return ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()];
                         }}
                     />
-                    <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }} />
+                    <YAxis stroke={axisStroke} tick={{ fill: tickFill, fontSize: 12 }} />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            backgroundColor: tooltipBg,
+                            border: `1px solid ${tooltipBorder}`,
                             borderRadius: '12px',
                             backdropFilter: 'blur(12px)',
-                            color: '#f1f5f9',
+                            color: tooltipColor,
                             padding: '8px 12px',
                         }}
                         labelFormatter={(value) => new Date(value).toLocaleDateString()}

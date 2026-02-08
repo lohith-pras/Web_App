@@ -9,10 +9,9 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     return (
         <nav className="fixed bottom-6 left-0 right-0 z-50 px-6 safe-area-inset-bottom">
             <div className="relative overflow-hidden max-w-md mx-auto bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-t-white/20 border-l-white/20 border-b border-r border-b-white/5 border-r-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] p-2">
-                <div className="flex justify-around items-center" role="tablist">
+                <div className="flex justify-around items-center">
                     <button
-                        role="tab"
-                        aria-selected={activeTab === 'log'}
+                        aria-current={activeTab === 'log' ? 'page' : undefined}
                         onClick={() => onTabChange('log')}
                         className={`flex flex-col items-center justify-center px-6 py-3 rounded-full transition-all duration-300 ${
                             activeTab === 'log' 
@@ -27,8 +26,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
                     </button>
 
                     <button
-                        role="tab"
-                        aria-selected={activeTab === 'insights'}
+                        aria-current={activeTab === 'insights' ? 'page' : undefined}
                         onClick={() => onTabChange('insights')}
                         className={`flex flex-col items-center justify-center px-6 py-3 rounded-full transition-all duration-300 ${
                             activeTab === 'insights'
@@ -43,8 +41,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
                     </button>
 
                     <button
-                        role="tab"
-                        aria-selected={activeTab === 'settings'}
+                        aria-current={activeTab === 'settings' ? 'page' : undefined}
                         onClick={() => onTabChange('settings')}
                         className={`flex flex-col items-center justify-center px-6 py-3 rounded-full transition-all duration-300 ${
                             activeTab === 'settings'
