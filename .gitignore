@@ -36,3 +36,5 @@ errors.txt
 *.local
 .env
 .env.local
+.env.development
+.env.production

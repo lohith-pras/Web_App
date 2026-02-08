@@ -8,6 +8,16 @@ import App from './App.tsx';
 import { ThemeProvider } from './contexts/ThemeContext.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 
+// Runtime safeguard: Ensure auth is enabled in production
+const isProduction = import.meta.env.MODE === 'production';
+const authEnabled = import.meta.env.VITE_ENABLE_AUTH === 'true';
+
+if (isProduction && !authEnabled) {
+  throw new Error(
+    'FATAL: Authentication must be enabled in production. Set VITE_ENABLE_AUTH=true in environment configuration.'
+  );
+}
+
 // Create React Query client
 const queryClient = new QueryClient({
   defaultOptions: {

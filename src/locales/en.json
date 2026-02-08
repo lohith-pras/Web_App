@@ -53,7 +53,7 @@
         "title": "Settings",
         "monthlyGoal": {
             "title": "Monthly Goal",
-            "description": "Set your target cigarettes per month",
+            "description": "Set your target number of cigarettes per month",
             "save": "Save Goal"
         },
         "customTriggers": {

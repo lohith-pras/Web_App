@@ -35,9 +35,15 @@ export function useTriggers() {
 
     const updateCustomTrigger = useCallback((id: string, name: string, icon: string) => {
         const trigger = customTriggers.find(t => t.id === id);
-        if (trigger) {
-            updateMutation.mutate({ ...trigger, name, icon });
+        if (!trigger) {
+            console.warn(
+                `updateCustomTrigger: Trigger with id "${id}" not found. ` +
+                `Current customTriggers count: ${customTriggers.length}. ` +
+                `Update operation will be skipped.`
+            );
+            return;
         }
+        updateMutation.mutate({ ...trigger, name, icon });
     }, [customTriggers, updateMutation]);
 
     return {

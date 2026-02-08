@@ -26,6 +26,7 @@ export function SettingsPage({
     isLoading = false,
 }: SettingsPageProps) {
     const { t } = useTranslation();
+    const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
     if (isLoading) {
         return (
@@ -35,8 +36,6 @@ export function SettingsPage({
         );
     }
 
-    const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-
     const getThemeLabel = () => {
         if (themeMode === 'system') {
             return isDark ? t('settings.theme.autoDark', { defaultValue: 'Auto (Dark)' }) : t('settings.theme.autoLight', { defaultValue: 'Auto (Light)' });
@@ -45,10 +44,9 @@ export function SettingsPage({
     };
 
     return (
-        <div className="min-h-screen px-4 md:px-6 lg:px-8 pt-8 pb-8 flex flex-col gap-6">
-            <div className="max-w-2xl mx-auto md:mx-0 w-full flex flex-col gap-6">
+        <div className="flex flex-col gap-6 w-full">
                 {/* Header */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-2 md:px-0">
                     <div className="relative overflow-hidden w-12 h-12 rounded-full bg-primary-600/30 dark:bg-primary-500/20 backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 flex items-center justify-center text-primary-600 dark:text-primary-400 shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -59,7 +57,8 @@ export function SettingsPage({
                 </div>
 
                 {/* Profile / Goal Section */}
-                <GlassCard className="flex items-center justify-between">
+                <div className="px-2 md:px-0">
+                    <GlassCard className="flex items-center justify-between">
                     <div>
                         <h3 className="text-label-primary font-medium">{t('settings.monthlyGoal.title')}</h3>
                         <p className="text-sm text-label-secondary">{t('settings.monthlyGoal.description')}: {monthlyGoal} {t('log.cigarettes').toLowerCase()}</p>
@@ -68,9 +67,10 @@ export function SettingsPage({
                         {monthlyGoal}
                     </div>
                 </GlassCard>
+                </div>
 
                 {/* Settings Group: App */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 px-2 md:px-0">
                     <h3 className="text-label-tertiary text-xs font-semibold uppercase tracking-wider ml-4">{t('settings.preferences', { defaultValue: 'Preferences' })}</h3>
                     <GlassCard className="p-0 overflow-hidden divide-y divide-separator/20">
                         <div className="p-4 flex items-center justify-between">
@@ -98,7 +98,7 @@ export function SettingsPage({
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => onSetTheme('light')}
-                                    aria-label="Light theme"
+                                    aria-label={t('settings.theme.light')}
                                     className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${themeMode === 'light'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
                                         : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
@@ -112,7 +112,7 @@ export function SettingsPage({
                                 </button>
                                 <button
                                     onClick={() => onSetTheme('dark')}
-                                    aria-label="Dark theme"
+                                    aria-label={t('settings.theme.dark')}
                                     className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${themeMode === 'dark'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
                                         : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
@@ -125,7 +125,7 @@ export function SettingsPage({
                                 </button>
                                 <button
                                     onClick={() => onSetTheme('system')}
-                                    aria-label="System preference"
+                                    aria-label={t('settings.theme.system')}
                                     className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center ${themeMode === 'system'
                                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
                                         : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
@@ -143,7 +143,7 @@ export function SettingsPage({
                 </div>
 
                 {/* Settings Group: Data */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 px-2 md:px-0">
                     <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-wider ml-4">{t('settings.data.title')}</h3>
                     <GlassCard className="p-0 overflow-hidden divide-y divide-gray-200/50 dark:divide-white/5">
                         <button className="w-full text-left p-4 flex items-center justify-between hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors">
@@ -163,7 +163,7 @@ export function SettingsPage({
                     </GlassCard>
                 </div>
 
-                <div className="mt-8 text-center">
+                <div className="mt-8 text-center px-2 md:px-0">
                     <div className="relative overflow-hidden w-12 h-12 bg-white/60 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/20 border-b border-r border-white/5 rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
                         <svg className="w-7 h-7 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
@@ -172,7 +172,6 @@ export function SettingsPage({
                     </div>
                     <p className="text-gray-600 dark:text-gray-300 text-sm">Version 1.0.0</p>
                 </div>
-            </div>
         </div>
     );
 }

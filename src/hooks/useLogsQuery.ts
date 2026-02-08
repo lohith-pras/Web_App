@@ -21,7 +21,29 @@ export function useAddLogMutation() {
             await dataAccess.saveLogs(updatedLogs);
             return newLog;
         },
-        onSuccess: () => {
+        onMutate: async (newLog: SmokingLog) => {
+            // Cancel outgoing refetches to avoid race conditions
+            await queryClient.cancelQueries({ queryKey: LOGS_QUERY_KEY });
+
+            // Snapshot previous value
+            const previousLogs = queryClient.getQueryData<SmokingLog[]>(LOGS_QUERY_KEY);
+
+            // Optimistically update cache
+            if (previousLogs) {
+                queryClient.setQueryData<SmokingLog[]>(LOGS_QUERY_KEY, [...previousLogs, newLog]);
+            }
+
+            // Return context for rollback
+            return { previousLogs };
+        },
+        onError: (_error, _newLog, context) => {
+            // Rollback on error
+            if (context?.previousLogs) {
+                queryClient.setQueryData(LOGS_QUERY_KEY, context.previousLogs);
+            }
+        },
+        onSettled: () => {
+            // Refetch to ensure consistency
             queryClient.invalidateQueries({ queryKey: LOGS_QUERY_KEY });
         },
     });

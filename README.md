@@ -22,8 +22,9 @@ A private, mobile-friendly Progressive Web App (PWA) to help track smoking habit
 
 1.  Clone the repository
 2.  Install dependencies: `npm install`
-3.  Run development server: `npm run dev`
-4.  Build for production: `npm run build`
+3.  Copy environment configuration: `cp .env.development.example .env.development`
+4.  Run development server: `npm run dev`
+5.  Build for production: `npm run build`
 
 ## Testing on Mobile Devices
 

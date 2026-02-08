@@ -75,9 +75,9 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
     }
 
     return (
-        <div className="min-h-screen px-4 md:px-6 lg:px-8 pt-8 pb-32 md:pb-8 flex flex-col gap-6">
+        <div className="flex flex-col gap-6 w-full">
             {/* Header */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 px-2 md:px-0">
                 {/* Elevated glass icon background */}
                 <div className="relative overflow-hidden w-12 h-12 rounded-full bg-primary-600/30 dark:bg-primary-500/20 backdrop-blur-[20px] backdrop-saturate-150 border border-t-white/30 dark:border-t-white/10 border-l-white/30 dark:border-l-white/10 border-b-white/10 dark:border-b-white/5 border-r-white/10 dark:border-r-white/5 flex items-center justify-center text-primary-600 dark:text-primary-400 shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,13 +89,16 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
             </div>
 
             {/* Time Period Selector */}
-            <div className="relative overflow-hidden bg-white/80 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border border-t-white/30 dark:border-t-white/10 border-l-white/30 dark:border-l-white/10 border-b-white/10 dark:border-b-white/5 border-r-white/10 dark:border-r-white/5 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] p-1 flex">
-                {/* Custom toggle implementation would go here, reusing existing component for now but wrapping it */}
-                <TimePeriodToggle selected={timePeriod} onChange={setTimePeriod} />
+            <div className="px-2 md:px-0">
+                <div className="relative overflow-hidden bg-white/80 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border border-t-white/30 dark:border-t-white/10 border-l-white/30 dark:border-l-white/10 border-b-white/10 dark:border-b-white/5 border-r-white/10 dark:border-r-white/5 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] p-1 flex">
+                    {/* Custom toggle implementation would go here, reusing existing component for now but wrapping it */}
+                    <TimePeriodToggle selected={timePeriod} onChange={setTimePeriod} />
+                </div>
             </div>
 
             {/* Goal Progress */}
-            <GlassCard className="relative overflow-hidden">
+            <div className="px-2 md:px-0">
+                <GlassCard className="relative overflow-hidden">
                 <div className="relative z-10">
                     {/* Apple HIG: Tertiary label for section headers */}
                     <h3 className="text-label-tertiary text-xs font-semibold uppercase tracking-wider mb-3 pl-0.5">{t('settings.monthlyGoal.title')}</h3>
@@ -113,9 +116,10 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
                     </div>
                 </div>
             </GlassCard>
+            </div>
 
             {/* Trends */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 px-2 md:px-0">
                 <GlassCard className="flex flex-col py-5">
                     {/* Apple HIG: Tertiary label */}
                     <span className="text-xs text-label-tertiary font-semibold uppercase tracking-wider mb-2">{t('insights.stats.average')}</span>
@@ -128,7 +132,7 @@ export function InsightsPage({ logs, monthlyGoal, currentMonthCount, progress, i
             </div>
 
             {/* Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-2 md:px-0">
                 <GlassCard className="py-6">
                     {/* Apple HIG: Secondary label for chart headers */}
                     <h3 className="text-label-secondary text-base font-semibold mb-4 pl-1">{t('insights.charts.dailyTrend')}</h3>

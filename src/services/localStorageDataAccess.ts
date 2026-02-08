@@ -76,7 +76,17 @@ export class LocalStorageDataAccess implements IDataAccess {
 
         try {
             const data = localStorage.getItem(STORAGE_KEYS.MONTHLY_GOAL);
-            return data ? parseInt(data, 10) : 0;
+            if (!data) return 0;
+            
+            const parsed = parseInt(data, 10);
+            
+            // Validate parsed value to avoid returning NaN
+            if (Number.isNaN(parsed) || !Number.isFinite(parsed)) {
+                console.warn('Invalid monthly goal value in storage:', data);
+                return 0;
+            }
+            
+            return parsed;
         } catch (error) {
             console.error('Error reading monthly goal from storage:', error);
             return 0;

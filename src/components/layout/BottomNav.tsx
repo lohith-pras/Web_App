@@ -56,8 +56,16 @@ export function BottomNav() {
     const { isDark } = useDarkMode();
     const location = useLocation();
 
-    // Determine active tab from current route
-    const activeTab = navItems.find(item => item.path === location.pathname)?.id || 'log';
+    // Determine active tab from current route using prefix matching for nested routes
+    // Prefer longest matching path when multiple items match
+    const activeTab = useMemo(() => {
+        const pathname = location.pathname;
+        const matchingItems = navItems.filter(item => pathname.startsWith(item.path));
+        if (matchingItems.length === 0) return 'log';
+        // Sort by path length descending to get longest match
+        matchingItems.sort((a, b) => b.path.length - a.path.length);
+        return matchingItems[0].id;
+    }, [location.pathname]);
 
     // Theme-aware colors from CSS variables
     const colors = useMemo(() => ({
@@ -68,7 +76,14 @@ export function BottomNav() {
     }), [isDark]);
 
     return (
-        <nav className="md:hidden fixed bottom-6 left-0 right-0 z-50 px-6 safe-area-inset-bottom">
+        <nav 
+            className="md:hidden fixed bottom-6 left-0 right-0 z-50 px-6 safe-area-inset-bottom"
+            style={{
+                paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
+                paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+                paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))'
+            }}
+        >
             {/* Apple HIG: Elevated glass background for navigation */}
             <div className="relative overflow-visible max-w-md mx-auto bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-t-white/30 dark:border-t-white/10 border-l-white/30 dark:border-l-white/10 border-b border-r border-b-white/10 dark:border-b-white/5 border-r-white/10 dark:border-r-white/5 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] p-2">
                 <div className="relative flex justify-around items-center">

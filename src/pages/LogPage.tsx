@@ -48,11 +48,11 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
     }, [logs, t]);
 
     return (
-        <div className="flex flex-col min-h-screen justify-start gap-y-8 p-6 md:p-8 lg:p-10 pb-32 md:pb-8">
+        <div className="flex flex-col justify-start gap-y-8 w-full">
             {/* TOP: Header & Large Progress Circle */}
-            <header className="flex-none">
+            <header className="flex-none px-2 md:px-0">
                 <div className="flex items-center justify-between w-full mb-6">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col min-w-0">
                         {/* Apple HIG: Primary label for main heading */}
                         <h1 className="text-2xl font-bold text-label-primary tracking-wider">{t('app.name')}</h1>
                         {/* Apple HIG: Secondary label for supporting text */}
@@ -140,7 +140,7 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
             </header>
 
             {/* MIDDLE: Recent Triggers Section */}
-            <section className="flex-1 mt-8 md:mt-12">
+            <section className="flex-1 px-2 md:px-0">
                 {/* Apple HIG: Tertiary label for section headers */}
                 <h3 className="text-sm uppercase tracking-wider text-label-tertiary mb-8">{t('log.triggers')}</h3>
                 <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
@@ -164,19 +164,17 @@ export function LogPage({ triggers, onAddLog, logs, isLoading = false }: LogPage
                 </div>
             </section>
 
-            {/* BOTTOM: Fixed Floating Action Button */}
-            <div className="fixed bottom-24 md:bottom-8 left-0 right-0 md:left-80 z-10 px-6">
-                <div className="max-w-md mx-auto">
-                    <button
-                        onClick={() => setShowModal(true)}
-                        className="relative overflow-hidden w-full py-3.5 rounded-2xl bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] font-semibold text-label-primary text-base md:text-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15"
-                    >
-                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Log Cigarette</span>
-                    </button>
-                </div>
+            {/* BOTTOM: Floating Action Button */}
+            <div className="mt-8 px-2 md:px-0">
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="relative overflow-hidden w-full py-3.5 rounded-2xl bg-white/70 dark:bg-white/[0.08] backdrop-blur-[20px] backdrop-saturate-150 border-t border-l border-white/30 dark:border-white/10 border-b border-r border-white/10 dark:border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] font-semibold text-label-primary text-base md:text-lg flex items-center justify-center gap-2.5 active:scale-95 transition-all hover:bg-white/80 dark:hover:bg-white/[0.12] hover:border-white/40 dark:hover:border-white/15"
+                >
+                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>{t('log.logButton')}</span>
+                </button>
             </div>
 
             <TriggerSelectionModal

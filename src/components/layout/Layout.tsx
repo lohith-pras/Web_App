@@ -2,12 +2,15 @@
 import type { ReactNode } from 'react';
 import { BottomNav } from './BottomNav';
 import { SideNav } from './SideNav';
+import { useSidebarCollapse } from '../../hooks/useSidebarCollapse';
 
 interface LayoutProps {
     children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
+    const { isCollapsed } = useSidebarCollapse();
+    
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black text-gray-900 dark:text-white font-sans relative overflow-hidden transition-colors duration-300">
             {/* Light Mode Background Blobs */}
@@ -23,8 +26,18 @@ export function Layout({ children }: LayoutProps) {
             {/* Desktop Side Navigation */}
             <SideNav />
 
-            <main className="relative z-10 pb-28 md:pb-8 ml-0 md:ml-80 max-w-md md:max-w-2xl lg:max-w-5xl mx-auto md:mr-auto min-h-screen flex flex-col p-4 md:p-6 lg:p-8">
-                {children}
+            {/* Main Content: Mobile full width with safe areas, Desktop offset by sidebar */}
+            <main 
+                className={`relative z-10 pb-24 md:pb-8 min-h-screen flex flex-col ${isCollapsed ? 'md:ml-20' : 'md:ml-80'}`}
+                style={{
+                    paddingLeft: 'max(env(safe-area-inset-left), 0px)',
+                    paddingRight: 'max(env(safe-area-inset-right), 0px)'
+                }}
+            >
+                {/* Structural padding layer - generous spacing for all viewports */}
+                <div className="w-full max-w-md md:max-w-2xl lg:max-w-5xl mx-auto px-6 md:px-8 lg:px-12 py-6 md:py-8 lg:py-10">
+                    {children}
+                </div>
             </main>
 
             {/* Mobile Bottom Navigation */}
