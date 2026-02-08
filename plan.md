@@ -113,11 +113,15 @@ Your smoking tracker uses cutting-edge technologies (React 19, TypeScript 5, Vit
 - Add `getStatus()` method to return storage availability and sync state
 - Add `handleError()` method to normalize errors with consistent codes
 - Create factory function to select implementation based on feature flags
-- Implement one-time migration function `runMigrationFromLocal()` that:
-  - Reads existing data via storage.ts adapter
-  - Writes to chosen DataAccess implementation
-  - Sets migration-complete flag (localStorage key: `migration_complete_v1`)
-  - Only runs once per user/browser
+- Implement one-time migration function `runMigrationFromLocal()` with defensive, idempotent flow:
+  - Check `MIGRATION_KEY` (e.g., `migration_complete_v1`) and **skip if already set** (idempotency)
+  - Create full backup: call `oldStorage.getAllData()` and persist to `MIGRATION_BACKUP_KEY` before any mutation
+  - Perform migration: `newDataAccess.writeAll(existingData)`
+  - Validate integrity: read back via `newDataAccess.getAllData()` and compare using `validateDataIntegrity()` helper
+  - Set `MIGRATION_KEY` **only after successful validation**
+  - On error or validation failure: restore via `oldStorage.restoreFromBackup(backup)` and return failed `MigrationResult`
+  - Schedule cleanup of `MIGRATION_BACKUP_KEY` after grace period (e.g., 7 days)
+  - Handle offline/network errors with retries or clear error reporting; report partial failures explicitly
 - Update factory to invoke migration when selecting cloud storage
 - Later implement `CloudDataAccess` without changing hooks
 - Refactor [useSmokingLogs.ts](src/hooks/useSmokingLogs.ts), [useTriggers.ts](src/hooks/useTriggers.ts), [useGoal.ts](src/hooks/useGoal.ts) to:
@@ -220,9 +224,13 @@ Your smoking tracker uses cutting-edge technologies (React 19, TypeScript 5, Vit
   - Set up npm audit in CI/CD pipeline
   - Add Snyk or GitHub Dependabot for vulnerability scanning
   - Document process for updating vulnerable dependencies
-- **Update Feature Flags:**
-  - Add security feature toggles in [src/config/features.ts](src/config/features.ts)
-  - Document which security features are enabled by default
+- **Enforce Security Controls (Environment-Based, Not Feature Flags):**
+  - Create [src/config/security.ts](src/config/security.ts) with environment-based security config:
+    - `enforceCSP` derived from `NODE_ENV` or `import.meta.env.MODE === 'production'`
+    - `requireCSRF`, `enableRateLimit`, `validateInput` set to `true` by default
+  - Keep feature flags like `features.useCloudStorage` and `features.enableAnalytics` in [src/config/features.ts](src/config/features.ts)
+  - **Do NOT expose security controls as toggleable feature flags** - security must be enforced by environment
+  - Update any code using `features.enforceCSP`, `features.requireCSRF`, etc. to import from `security` object
 - **Update AuthContext:**
   - Add secure token handling documentation
   - Implement token refresh mechanism
@@ -251,7 +259,7 @@ Your smoking tracker uses cutting-edge technologies (React 19, TypeScript 5, Vit
 
 **Why now:** UI patterns and state management can be built before backend exists
 
-#### 10. Attach User ID to Data
+#### 11. Attach User ID to Data
 
 **Goal:** Prepare data structures for multi-user support with proper validation and migration.
 
@@ -317,13 +325,24 @@ Your smoking tracker uses cutting-edge technologies (React 19, TypeScript 5, Vit
   };
 
   // Request interceptor for auth tokens - safely access and mutate headers
+  // ⚠️ SECURITY WARNING: The localStorage approach below is vulnerable to XSS attacks.
+  // For production, use httpOnly cookies for token storage and enable CSRF protection:
+  //   1. Enable axios withCredentials: axios.create({ baseURL: API_URL, withCredentials: true })
+  //   2. Remove localStorage.getItem("auth_token") - server sends token via httpOnly cookie
+  //   3. Add CSRF token from meta tag: config.headers['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+  //   4. Backend must set secure, httpOnly, sameSite cookies and validate CSRF tokens
   apiClient.interceptors.request.use(
     (config) => {
       try {
-        const token = localStorage.getItem("auth_token");
+        const token = localStorage.getItem("auth_token"); // 🔒 Replace with httpOnly cookies in production!
         if (token && config.headers) {
           config.headers.Authorization = `Bearer ${token}`;
         }
+        // CSRF protection (uncomment when using cookies):
+        // const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        // if (csrfToken && config.headers) {
+        //   config.headers['X-CSRF-Token'] = csrfToken;
+        // }
       } catch (error) {
         console.error("Error reading auth token:", error);
         // Continue without token rather than blocking request

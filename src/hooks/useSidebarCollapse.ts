@@ -1,28 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const SIDEBAR_COLLAPSE_KEY = 'sidebar-collapsed';
 
 export function useSidebarCollapse() {
-    // Initialize with safe default for SSR
-    const [isCollapsed, setIsCollapsed] = useState(false);
-
-    // Read from localStorage client-side only
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-        
+    // Initialize synchronously from localStorage to avoid flicker
+    const [isCollapsed, setIsCollapsed] = useState(() => {
+        if (typeof window === 'undefined') return false;
         try {
             const stored = localStorage.getItem(SIDEBAR_COLLAPSE_KEY);
-            if (stored === 'true') {
-                setIsCollapsed(true);
-            }
+            return stored === 'true';
         } catch (error) {
             console.error('Error reading sidebar collapse state:', error);
+            return false;
         }
+    });
+
+    // Track whether the hook has initialized to prevent writing on first render
+    const initializedRef = useRef(false);
+
+    // Mark as initialized after first render
+    useEffect(() => {
+        initializedRef.current = true;
     }, []);
 
-    // Write to localStorage, guarding for SSR
+    // Write to localStorage only after initialization to prevent overwriting on mount
     useEffect(() => {
         if (typeof window === 'undefined') return;
+        if (!initializedRef.current) return; // Skip write on initial mount
         
         try {
             localStorage.setItem(SIDEBAR_COLLAPSE_KEY, String(isCollapsed));

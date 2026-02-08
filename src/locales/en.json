@@ -8,6 +8,10 @@
         "insights": "Insights",
         "settings": "Settings"
     },
+    "sidenav": {
+        "collapse": "Collapse sidebar",
+        "expand": "Expand sidebar"
+    },
     "error": {
         "title": "Something went wrong",
         "message": "We encountered an unexpected error. Don't worry, your data is safe.",

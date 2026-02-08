@@ -95,7 +95,7 @@ export function SideNav() {
                             <button
                                 onClick={toggle}
                                 className="p-2 rounded-xl hover:bg-white/10 transition-colors text-label-secondary"
-                                aria-label="Collapse sidebar"
+                                aria-label={t('sidenav.collapse')}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
@@ -107,7 +107,7 @@ export function SideNav() {
                         <button
                             onClick={toggle}
                             className="p-2 rounded-xl hover:bg-white/10 transition-colors text-label-secondary mx-auto"
-                            aria-label="Expand sidebar"
+                            aria-label={t('sidenav.expand')}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />

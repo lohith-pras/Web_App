@@ -1,10 +1,12 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GlassCard } from '../components/common/GlassCard';
 import type { SmokingLog, ThemeMode } from '../types';
 
 import { useTranslation } from 'react-i18next';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+
+const NOTIFICATIONS_PREF_KEY = 'notifications-enabled';
 
 interface SettingsPageProps {
     monthlyGoal: number;
@@ -26,7 +28,73 @@ export function SettingsPage({
     isLoading = false,
 }: SettingsPageProps) {
     const { t } = useTranslation();
-    const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+    // Initialize from localStorage and reconcile with actual browser permissions
+    const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+        try {
+            const stored = localStorage.getItem(NOTIFICATIONS_PREF_KEY);
+            return stored === 'true';
+        } catch {
+            return false;
+        }
+    });
+
+    // Reconcile state with actual Notification permission on mount
+    useEffect(() => {
+        if (typeof window === 'undefined' || !('Notification' in window)) return;
+        
+        // If permission is denied, ensure local state reflects that
+        if (Notification.permission === 'denied') {
+            setNotificationsEnabled(false);
+            try {
+                localStorage.setItem(NOTIFICATIONS_PREF_KEY, 'false');
+            } catch (error) {
+                console.error('Error saving notification preference:', error);
+            }
+        } 
+        // If permission is granted, sync with stored preference
+        else if (Notification.permission === 'granted') {
+            // Keep existing preference if granted
+        }
+        // If permission is default (not asked), keep stored preference
+    }, []);
+
+    const handleNotificationToggle = async () => {
+        // Check if Notifications API is supported
+        if (typeof window === 'undefined' || !('Notification' in window)) {
+            console.warn('Notifications are not supported in this browser');
+            return;
+        }
+
+        // If enabling, request permission
+        if (!notificationsEnabled) {
+            try {
+                const permission = await Notification.requestPermission();
+                
+                if (permission === 'granted') {
+                    setNotificationsEnabled(true);
+                    try {
+                        localStorage.setItem(NOTIFICATIONS_PREF_KEY, 'true');
+                    } catch (error) {
+                        console.error('Error saving notification preference:', error);
+                    }
+                } else if (permission === 'denied') {
+                    // Show user a message that they denied permission
+                    console.warn('Notification permission denied by user');
+                }
+                // If 'default', user dismissed the prompt - do nothing
+            } catch (error) {
+                console.error('Error requesting notification permission:', error);
+            }
+        } else {
+            // Disabling notifications - just update preference
+            setNotificationsEnabled(false);
+            try {
+                localStorage.setItem(NOTIFICATIONS_PREF_KEY, 'false');
+            } catch (error) {
+                console.error('Error saving notification preference:', error);
+            }
+        }
+    };
 
     if (isLoading) {
         return (
@@ -79,7 +147,7 @@ export function SettingsPage({
                                 role="switch"
                                 aria-checked={notificationsEnabled}
                                 aria-labelledby="notifications-label"
-                                onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+                                onClick={handleNotificationToggle}
                                 className={`w-12 h-7 rounded-full transition-colors relative ${notificationsEnabled ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gray-300 dark:bg-white/10'
                                     }`}
                             >
